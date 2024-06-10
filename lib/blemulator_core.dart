@@ -4,10 +4,9 @@ part of blemulator;
 class Blemulator {
   static final Blemulator _instance = Blemulator._internal();
 
-  DartToPlatformBridge _toPlatformBridge;
-  SimulationManager _simulationManager;
-  // ignore: unused_field
-  PlatformToDartBridge _toDartBridge;
+  late final DartToPlatformBridge _toPlatformBridge;
+  late final SimulationManager _simulationManager;
+  late final PlatformToDartBridge _toDartBridge;
 
   factory Blemulator() => _instance;
 

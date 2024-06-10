@@ -3,15 +3,15 @@ part of blemulator;
 class ScanInfo {
   int rssi;
   bool isConnectable;
-  int txPowerLevel;
+  int? txPowerLevel;
 
-  Uint8List manufacturerData;
-  Map<String, Uint8List> serviceData;
-  List<String> serviceUuids;
+  Uint8List? manufacturerData;
+  Map<String, Uint8List>? serviceData;
+  List<String>? serviceUuids;
 
-  String localName;
-  List<String> solicitedServiceUuids;
-  List<String> overflowUuids;
+  String? localName;
+  List<String>? solicitedServiceUuids;
+  List<String>? overflowUuids;
 
   ScanInfo({
     this.rssi = defaultRssi,
@@ -33,9 +33,9 @@ abstract class SimulatedPeripheral {
   ScanInfo scanInfo;
   int mtu;
 
-  Map<int, SimulatedService> _services;
-  Map<int, SimulatedCharacteristic> _characteristics;
-  Map<int, SimulatedDescriptor> _descriptors;
+  late final Map<int, SimulatedService> _services;
+  late final Map<int, SimulatedCharacteristic> _characteristics;
+  late final Map<int, SimulatedDescriptor> _descriptors;
   final StreamController<flutter_ble_lib.PeripheralConnectionState>
       _connectionStateStreamController;
 
@@ -43,35 +43,28 @@ abstract class SimulatedPeripheral {
   bool _discoveryDone = false;
 
   SimulatedPeripheral({
-    @required this.name,
-    @required this.id,
-    @required this.advertisementInterval,
-    @required List<SimulatedService> services,
-    this.scanInfo,
-  }) : _connectionStateStreamController = StreamController.broadcast() {
-    mtu = defaultMtu;
-    scanInfo ??= ScanInfo();
+    required this.name,
+    required this.id,
+    required this.advertisementInterval,
+    required List<SimulatedService> services,
+    ScanInfo? scanInfo,
+  })  : _connectionStateStreamController = StreamController.broadcast(),
+        scanInfo = scanInfo ?? ScanInfo(),
+        mtu = defaultMtu {
+    this.scanInfo.serviceUuids ??= [];
 
-    scanInfo.serviceUuids ??= [];
-
-    scanInfo.serviceUuids.addAll(services
+    this.scanInfo.serviceUuids!.addAll(services
         .where((service) => service.isAdvertised)
         .map((service) => service.uuid));
 
-    _services = Map.fromIterable(services, key: (service) => service.id);
+    _services = {for (var service in services) service.id: service};
     _characteristics = {};
     _descriptors = {};
     for (var service in services) {
       for (var characteristic in service.characteristics()) {
-        _characteristics.putIfAbsent(
-          characteristic.id,
-          () => characteristic,
-        );
+        _characteristics[characteristic.id] = characteristic;
         for (var descriptor in characteristic.descriptors()) {
-          _descriptors.putIfAbsent(
-            descriptor.id,
-            () => descriptor,
-          );
+          _descriptors[descriptor.id] = descriptor;
         }
       }
     }
@@ -124,77 +117,58 @@ abstract class SimulatedPeripheral {
     return _services.values.toList();
   }
 
-  SimulatedService service(int id) => _services[id];
+  SimulatedService? service(int id) => _services[id];
 
-  SimulatedCharacteristic characteristic(int characteristicIdentifier) =>
+  SimulatedCharacteristic? characteristic(int characteristicIdentifier) =>
       _characteristics[characteristicIdentifier];
 
-  SimulatedDescriptor descriptor(int descriptorIdentifier) =>
+  SimulatedDescriptor? descriptor(int descriptorIdentifier) =>
       _descriptors[descriptorIdentifier];
 
   bool hasService(int id) => _services.containsKey(id);
 
   bool hasServiceWithUuid(String uuid) {
-    var service = _services.values.firstWhere(
-      (service) => service.uuid.toLowerCase() == uuid.toLowerCase(),
-      orElse: () => null,
-    );
-    return service != null;
+    return _services.values
+        .any((service) => service.uuid.toLowerCase() == uuid.toLowerCase());
   }
 
   bool hasCharacteristic(int id) => _characteristics.containsKey(id);
 
   bool hasCharacteristicWithUuid(String uuid) {
-    var characteristic = _characteristics.values.firstWhere(
-      (characteristic) =>
-          characteristic.uuid.toLowerCase() == uuid.toLowerCase(),
-      orElse: () => null,
-    );
-    return characteristic != null;
+    return _characteristics.values.any((characteristic) =>
+        characteristic.uuid.toLowerCase() == uuid.toLowerCase());
   }
 
   bool hasDescriptor(int id) => _descriptors.containsKey(id);
 
   bool hasDescriptorWithUuid(
     String uuid, {
-    String characteristicUuid,
-    int characteristicId,
+    required String characteristicUuid,
+    required int characteristicId,
   }) {
-    var descriptor = _descriptors.values.firstWhere(
-      (descriptor) {
-        var found = descriptor.uuid.toLowerCase() == uuid.toLowerCase();
-        found = found &&
-            descriptor.characteristic.uuid.toLowerCase() ==
-                characteristicUuid.toLowerCase();
-              found = found && descriptor.characteristic.id == characteristicId;
-      
-        return found;
-      },
-      orElse: () => null,
-    );
-    return descriptor != null;
+    return _descriptors.values.any((descriptor) {
+      return descriptor.uuid.toLowerCase() == uuid.toLowerCase() &&
+          descriptor.characteristic.uuid.toLowerCase() ==
+              characteristicUuid.toLowerCase() &&
+          descriptor.characteristic.id == characteristicId;
+    });
   }
 
-  SimulatedCharacteristic getCharacteristicForService(
+  SimulatedCharacteristic? getCharacteristicForService(
     String serviceUuid,
     String characteristicUuid,
   ) {
-    SimulatedCharacteristic targetCharacteristic;
-
-    servicesLoop:
     for (var service in services()) {
       if (service.uuid.toLowerCase() == serviceUuid.toLowerCase()) {
         var characteristic = service.characteristics().firstWhere(
-            (characteristic) =>
-                characteristic.uuid.toLowerCase() ==
-                characteristicUuid.toLowerCase(),
-            orElse: () => null);
-
-        targetCharacteristic = characteristic;
-        break servicesLoop;
-            }
+              (characteristic) =>
+                  characteristic.uuid.toLowerCase() ==
+                  characteristicUuid.toLowerCase(),
+            );
+        return characteristic;
+      }
     }
-    return targetCharacteristic;
+    return null;
   }
 
   Future<int> rssi() async => scanInfo.rssi;

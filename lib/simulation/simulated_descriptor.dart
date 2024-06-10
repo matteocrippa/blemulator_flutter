@@ -2,17 +2,17 @@ part of blemulator;
 
 class SimulatedDescriptor {
   final String uuid;
-  final String convenienceName;
+  final String? convenienceName;
   final bool readable;
   final bool writable;
-  Uint8List _value;
+  late Uint8List _value;
   final int id;
-  SimulatedCharacteristic characteristic;
-  StreamController<Uint8List> _streamController;
+  late SimulatedCharacteristic characteristic;
+  StreamController<Uint8List>? _streamController;
 
   SimulatedDescriptor({
-    @required String uuid,
-    @required Uint8List value,
+    required String uuid,
+    required Uint8List value,
     this.convenienceName,
     this.readable = true,
     this.writable = true,
@@ -28,18 +28,18 @@ class SimulatedDescriptor {
 
   Future<void> write(Uint8List value) async {
     _value = value;
-    if (_streamController.hasListener == true) {
-      _streamController.add(_value);
+    if (_streamController?.hasListener == true) {
+      _streamController!.add(_value);
     }
   }
 
   Stream<Uint8List> monitor() {
-    _streamController ??= StreamController.broadcast(
+    _streamController ??= StreamController<Uint8List>.broadcast(
       onCancel: () {
-        _streamController.close();
+        _streamController?.close();
         _streamController = null;
       },
     );
-    return _streamController.stream;
+    return _streamController!.stream;
   }
 }

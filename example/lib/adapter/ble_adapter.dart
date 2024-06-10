@@ -4,7 +4,7 @@ import 'package:blemulator_example/example_peripherals/generic_peripheral.dart';
 import 'package:blemulator_example/model/ble_peripheral.dart';
 import 'package:blemulator_example/example_peripherals/sensor_tag.dart';
 import 'package:blemulator_example/model/ble_service.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
+import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator/blemulator.dart';
 
 abstract class BleAdapterException implements Exception {
@@ -96,10 +96,8 @@ class BleAdapter {
         .discoverAllServicesAndCharacteristics();
 
     var bleServices = <BleService>[];
-    for (var service
-        in await _scannedPeripherals[peripheralId].services()) {
-      var serviceCharacteristics =
-          await service.characteristics();
+    for (var service in await _scannedPeripherals[peripheralId].services()) {
+      var serviceCharacteristics = await service.characteristics();
       var bleCharacteristics = serviceCharacteristics
           .map(
             (characteristic) =>

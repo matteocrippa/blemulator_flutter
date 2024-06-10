@@ -3,7 +3,7 @@ import 'package:blemulator_example/adapter/ble_adapter.dart';
 import 'package:blemulator_example/model/ble_peripheral.dart';
 import 'package:bloc/bloc.dart';
 import './bloc.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
+import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 
 class PeripheralDetailsBloc
     extends Bloc<PeripheralDetailsEvent, PeripheralDetailsState> {

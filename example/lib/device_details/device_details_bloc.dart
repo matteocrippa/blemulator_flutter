@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:fimber/fimber.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
+import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 import 'package:blemulator_example/repository/device_repository.dart';
 import 'package:blemulator_example/test_scenarios/test_scenarios.dart';
@@ -86,7 +86,8 @@ class DeviceDetailsBloc {
   void readRssi() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .testReadingRssi();
     });
   }
@@ -94,7 +95,8 @@ class DeviceDetailsBloc {
   void requestMtu() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .testRequestingMtu();
     });
   }
@@ -102,7 +104,8 @@ class DeviceDetailsBloc {
   void discovery() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .discovery();
     });
   }
@@ -110,7 +113,8 @@ class DeviceDetailsBloc {
   void fetchConnectedDevices() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .fetchConnectedDevice();
     });
   }
@@ -118,7 +122,8 @@ class DeviceDetailsBloc {
   void fetchKnownDevices() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .fetchKnownDevice();
     });
   }
@@ -126,7 +131,8 @@ class DeviceDetailsBloc {
   void readCharacteristicForPeripheral() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .readCharacteristicForPeripheral();
     });
   }
@@ -134,7 +140,8 @@ class DeviceDetailsBloc {
   void readCharacteristicForService() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .readCharacteristicForService();
     });
   }
@@ -142,7 +149,8 @@ class DeviceDetailsBloc {
   void readCharacteristicDirectly() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .readCharacteristic();
     });
   }
@@ -150,7 +158,8 @@ class DeviceDetailsBloc {
   void writeCharacteristicForPeripheral() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .writeCharacteristicForPeripheral();
     });
   }
@@ -158,7 +167,8 @@ class DeviceDetailsBloc {
   void writeCharacteristicForService() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .writeCharacteristicForService();
     });
   }
@@ -166,7 +176,8 @@ class DeviceDetailsBloc {
   void writeCharacteristicDirectly() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .writeCharacteristic();
     });
   }
@@ -174,7 +185,8 @@ class DeviceDetailsBloc {
   void monitorCharacteristicForPeripheral() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .monitorCharacteristicForPeripheral();
     });
   }
@@ -182,7 +194,8 @@ class DeviceDetailsBloc {
   void monitorCharacteristicForService() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .monitorCharacteristicForService();
     });
   }
@@ -190,7 +203,8 @@ class DeviceDetailsBloc {
   void monitorCharacteristicDirectly() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .monitorCharacteristic();
     });
   }
@@ -198,7 +212,8 @@ class DeviceDetailsBloc {
   void disableBluetooth() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .disableBluetooth();
     });
   }
@@ -206,7 +221,8 @@ class DeviceDetailsBloc {
   void enableBluetooth() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .enableBluetooth();
     });
   }
@@ -214,7 +230,8 @@ class DeviceDetailsBloc {
   void fetchBluetoothState() {
     _clearLogs();
     _deviceController.stream.listen((bleDevice) async {
-      await PeripheralTestOperations(_bleManager, bleDevice.peripheral, log, logError)
+      await PeripheralTestOperations(
+              _bleManager, bleDevice.peripheral, log, logError)
           .fetchBluetoothState();
     });
   }

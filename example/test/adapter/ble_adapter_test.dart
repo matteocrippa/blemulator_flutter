@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:blemulator_example/adapter/ble_adapter.dart';
 import 'package:blemulator_example/model/ble_peripheral.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
+import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -102,8 +102,7 @@ void main() {
 
       var peripheral = setupMockPeripheral();
       var advertisementData = setupMockAdvertisementData();
-      var scanResult =
-          setupMockScanResult(peripheral, advertisementData);
+      var scanResult = setupMockScanResult(peripheral, advertisementData);
 
       // when
       fireScanResultFromManager(scanResult);

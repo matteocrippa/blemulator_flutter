@@ -1,9 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:blemulator_example/repository/device_repository.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
-
+import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'device_details_bloc.dart';
-
 
 class DeviceDetailsBlocProvider extends InheritedWidget {
   final DeviceDetailsBloc deviceDetailsBloc;
@@ -12,7 +10,8 @@ class DeviceDetailsBlocProvider extends InheritedWidget {
     Key key,
     DeviceDetailsBloc deviceDetailsBloc,
     Widget child,
-  })  : deviceDetailsBloc = deviceDetailsBloc ?? DeviceDetailsBloc(DeviceRepository(), BleManager()),
+  })  : deviceDetailsBloc = deviceDetailsBloc ??
+            DeviceDetailsBloc(DeviceRepository(), BleManager()),
         super(key: key, child: child);
 
   @override

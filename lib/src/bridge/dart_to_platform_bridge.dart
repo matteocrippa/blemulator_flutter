@@ -1,11 +1,10 @@
 part of internal;
 
 class DartToPlatformBridge {
-  MethodChannel _dartToPlatformChannel;
+  final MethodChannel _dartToPlatformChannel;
 
-  DartToPlatformBridge() {
-    _dartToPlatformChannel = MethodChannel(ChannelName.dartToPlatform);
-  }
+  DartToPlatformBridge()
+      : _dartToPlatformChannel = MethodChannel(ChannelName.dartToPlatform);
 
   Future<void> simulate() =>
       _dartToPlatformChannel.invokeMethod(PlatformMethodName.simulate);
@@ -37,7 +36,7 @@ class DartToPlatformBridge {
                 _connectionStateToString(connectionState),
           });
 
-  String _connectionStateToString(
+  String? _connectionStateToString(
       flutter_ble_lib.PeripheralConnectionState state) {
     switch (state) {
       case flutter_ble_lib.PeripheralConnectionState.connecting:

@@ -2,10 +2,10 @@ part of internal;
 
 class PlatformToDartBridge {
   final SimulationManager _manager;
-  MethodChannel _platformToDartChannel;
+  final MethodChannel _platformToDartChannel;
 
-  PlatformToDartBridge(this._manager) {
-    _platformToDartChannel = MethodChannel(ChannelName.platformToDart);
+  PlatformToDartBridge(this._manager)
+      : _platformToDartChannel = MethodChannel(ChannelName.platformToDart) {
     _platformToDartChannel.setMethodCallHandler(dispatchPlatformCall);
   }
 
@@ -129,7 +129,7 @@ class PlatformToDartBridge {
                   (characteristic) => mapToCharacteristicJson(
                     call.arguments[ArgumentName.id],
                     characteristic,
-                    null,
+                    Uint8List.fromList([]),
                     serializeDescriptors: true,
                   ),
                 )

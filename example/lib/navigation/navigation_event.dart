@@ -13,7 +13,7 @@ class Pop extends NavigationEvent {}
 class NavigateToPeripheralDetails extends NavigationEvent {
   final BlePeripheral peripheral;
 
-  const NavigateToPeripheralDetails({this.peripheral});
+  const NavigateToPeripheralDetails({required this.peripheral});
 
   @override
   List<Object> get props => [peripheral];

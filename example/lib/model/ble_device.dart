@@ -25,8 +25,8 @@ abstract class BleDevice {
   }
 
   factory BleDevice.notConnected(
-      String name, String id, Peripheral peripheral) {
-    return DisconnectedBleDevice(name, id, peripheral);
+      String? name, String id, Peripheral peripheral) {
+    return DisconnectedBleDevice(name ?? id, id, peripheral);
   }
 
   DeviceCategory _nameToCategory(String name) {

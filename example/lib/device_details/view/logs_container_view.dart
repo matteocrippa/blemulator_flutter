@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:blemulator_example/device_details/device_details_bloc.dart';
 
 class LogsContainerView extends StatelessWidget {
-
-  final Observable<List<DebugLog>> _logs;
+  final Stream<List<DebugLog>> _logs;
 
   LogsContainerView(this._logs);
 
@@ -33,7 +31,7 @@ class LogsContainerView extends StatelessWidget {
 
   Widget _buildLogs(BuildContext context, AsyncSnapshot<List<DebugLog>> logs) {
     return ListView.builder(
-      itemCount: logs.data.length,
+      itemCount: logs.data?.length ?? 0,
       shrinkWrap: true,
       itemBuilder: (buildContext, index) => Container(
         decoration: BoxDecoration(
@@ -56,12 +54,12 @@ class LogsContainerView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  logs.data[index].time,
+                  logs.data![index].time,
                   style: TextStyle(fontSize: 9),
                 ),
               ),
               Flexible(
-                child: Text(logs.data[index].content,
+                child: Text(logs.data![index].content,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: TextStyle(fontSize: 13)),

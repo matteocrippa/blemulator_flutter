@@ -15,8 +15,8 @@ class DevicesListScreen extends StatefulWidget {
 }
 
 class DeviceListScreenState extends State<DevicesListScreen> {
-  DevicesBloc _devicesBloc;
-  StreamSubscription _appStateSubscription;
+  late DevicesBloc _devicesBloc;
+  late StreamSubscription _appStateSubscription;
   bool _shouldRunOnResume = true;
 
   @override
@@ -94,17 +94,17 @@ class DeviceListScreenState extends State<DevicesListScreen> {
 }
 
 class DevicesList extends ListView {
-  DevicesList(DevicesBloc devicesBloc, List<BleDevice> devices)
+  DevicesList(DevicesBloc devicesBloc, List<BleDevice>? devices)
       : super.separated(
             separatorBuilder: (context, index) => Divider(
                   color: Colors.grey[300],
                   height: 0,
                   indent: 0,
                 ),
-            itemCount: devices.length,
+            itemCount: devices?.length ?? 0,
             itemBuilder: (context, i) {
               Fimber.d('Build row for $i');
-              return _buildRow(context, devices[i],
+              return _buildRow(context, devices![i],
                   _createTapListener(devicesBloc, devices[i]));
             });
 

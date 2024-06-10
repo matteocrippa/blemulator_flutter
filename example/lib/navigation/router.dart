@@ -17,8 +17,7 @@ class Router {
         );
       case RouteName.peripheralDetails:
         return navigation.RouteFactory.build<PeripheralDetailsBloc>(
-          PeripheralDetailsBloc(
-              BleAdapterInjector.inject, settings.arguments),
+          PeripheralDetailsBloc(BleAdapterInjector.inject, settings.arguments),
           PeripheralDetailsScreen(),
         );
       default:

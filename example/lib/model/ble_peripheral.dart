@@ -20,7 +20,7 @@ class BlePeripheralCategoryResolver {
   static const String sensorTag = 'SensorTag';
 
   static BlePeripheralCategory categoryForScanResult(ScanResult scanResult) {
-    return _isSensorTag(scanResult.peripheral.name)
+    return _isSensorTag(scanResult.peripheral.name ?? '')
         ? BlePeripheralCategory.sensorTag
         : BlePeripheralCategory.other;
   }

@@ -7,12 +7,9 @@ import './bloc.dart';
 class PeripheralListBloc
     extends Bloc<PeripheralListEvent, PeripheralListState> {
   final BleAdapter _bleAdapter;
-  StreamSubscription _blePeripheralsSubscription;
+  StreamSubscription<BlePeripheral>? _blePeripheralsSubscription;
 
-  PeripheralListBloc(this._bleAdapter);
-
-  @override
-  PeripheralListState get initialState => PeripheralListState.initial();
+  PeripheralListBloc(this._bleAdapter) : super(PeripheralListState.initial());
 
   @override
   Stream<PeripheralListState> mapEventToState(
@@ -29,17 +26,18 @@ class PeripheralListBloc
 
   Stream<PeripheralListState> _mapStartPeripheralScanToState(
       StartPeripheralScan event) async* {
-    _cancelBlePeripheralSubscription();
+    await _cancelBlePeripheralSubscription();
     _blePeripheralsSubscription =
         _bleAdapter.blePeripherals.listen((BlePeripheral peripheral) {
       add(NewPeripheralScan(peripheral));
     });
-    yield PeripheralListState(peripherals: state.peripherals, scanningEnabled: true);
+    yield PeripheralListState(
+        peripherals: state.peripherals, scanningEnabled: true);
   }
 
   Stream<PeripheralListState> _mapStopPeripheralScanToState(
       StopPeripheralScan event) async* {
-    _cancelBlePeripheralSubscription();
+    await _cancelBlePeripheralSubscription();
     yield PeripheralListState(
         peripherals: state.peripherals, scanningEnabled: false);
   }
@@ -56,9 +54,9 @@ class PeripheralListBloc
         scanningEnabled: state.scanningEnabled);
   }
 
-  void _cancelBlePeripheralSubscription() async {
-    await _blePeripheralsSubscription.cancel();
-    }
+  Future<void> _cancelBlePeripheralSubscription() async {
+    await _blePeripheralsSubscription?.cancel();
+  }
 
   @override
   Future<void> close() {

@@ -45,7 +45,7 @@ class BleCharacteristic extends Equatable {
 
   BleCharacteristic.fromCharacteristic(Characteristic characteristic)
       : uuid = characteristic.uuid,
-        value = null,
+        value = Uint8List.fromList([]),
         isReadable = characteristic.isReadable,
         isWritableWithResponse = characteristic.isWritableWithResponse,
         isWritableWithoutResponse = characteristic.isWritableWithoutResponse,

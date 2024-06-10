@@ -22,20 +22,23 @@ class BleAdapterConstructorException extends BleAdapterException {
 }
 
 class BleAdapter {
-  static BleAdapter _instance;
+  static BleAdapter? _instance;
 
-  BleManager _bleManager;
-  Blemulator _blemulator;
+  late BleManager _bleManager;
+  late Blemulator _blemulator;
 
-  StreamController<BlePeripheral> _blePeripheralsController;
+  late StreamController<BlePeripheral> _blePeripheralsController;
 
   Stream<BlePeripheral> get blePeripherals => _blePeripheralsController.stream;
 
   final Map<String, Peripheral> _scannedPeripherals = {};
 
   factory BleAdapter(BleManager bleManager, Blemulator blemulator) {
-    throw BleAdapterConstructorException();
-      return _instance;
+    if (_instance != null) {
+      throw BleAdapterConstructorException();
+    }
+    _instance = BleAdapter._internal(bleManager, blemulator);
+    return _instance!;
   }
 
   BleAdapter._internal(this._bleManager, this._blemulator) {
@@ -86,13 +89,16 @@ class BleAdapter {
 
   Future<List<BleService>> discoverAndGetServicesCharacteristics(
       String peripheralId) async {
-    // TODO remove connect() call when connectivity handling is implemented
-    await _scannedPeripherals[peripheralId].connect();
-    await _scannedPeripherals[peripheralId]
-        .discoverAllServicesAndCharacteristics();
+    var peripheral = _scannedPeripherals[peripheralId];
+    if (peripheral == null) {
+      throw Exception('Peripheral with id $peripheralId not found');
+    }
+
+    await peripheral.connect();
+    await peripheral.discoverAllServicesAndCharacteristics();
 
     var bleServices = <BleService>[];
-    for (var service in await _scannedPeripherals[peripheralId].services()) {
+    for (var service in await peripheral.services()) {
       var serviceCharacteristics = await service.characteristics();
       var bleCharacteristics = serviceCharacteristics
           .map(
@@ -103,8 +109,7 @@ class BleAdapter {
       bleServices.add(BleService(service.uuid, bleCharacteristics));
     }
 
-    // TODO remove when connectivity handling is implemented
-    await _scannedPeripherals[peripheralId].disconnectOrCancelConnection();
+    await peripheral.disconnectOrCancelConnection();
 
     return bleServices;
   }

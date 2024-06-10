@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 
 class PropertyRow extends StatelessWidget {
   final String title;
-  final String value;
-  final Widget titleIcon;
-  final Color titleColor;
-  final String valueCompanion;
+  final String? value;
+  final Widget? titleIcon;
+  final Color? titleColor;
+  final String? valueCompanion;
   final TextStyle valueTextStyle;
-  final Widget rowAccessory;
-  final Widget titleAccessory;
-  final Widget valueAccessory;
-  final GestureTapCallback onTap;
+  final Widget? rowAccessory;
+  final Widget? titleAccessory;
+  final Widget? valueAccessory;
+  final GestureTapCallback? onTap;
 
   PropertyRow({
-    @required this.title,
+    required this.title,
     this.titleIcon,
     this.titleColor,
-    @required this.value,
+    required this.value,
     this.valueTextStyle = CustomTextStyle.cardValue,
     this.valueCompanion,
     this.rowAccessory,
@@ -31,12 +31,13 @@ class PropertyRow extends StatelessWidget {
     return Card(
       margin: EdgeInsets.all(8.0),
       child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: _buildCardBody(),
-          )),
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: _buildCardBody(),
+        ),
+      ),
     );
   }
 
@@ -45,10 +46,10 @@ class PropertyRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Expanded(child: _buildMainColumn()),
-        rowAccessory,
+        if (rowAccessory != null) rowAccessory!,
       ],
     );
-    }
+  }
 
   Widget _buildMainColumn() {
     return Column(
@@ -67,13 +68,14 @@ class PropertyRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 4.0),
-          child: titleIcon,
-        ),
+        if (titleIcon != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 4.0),
+            child: titleIcon,
+          ),
         Expanded(
           child: Text(
-            title ?? '',
+            title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: CustomTextStyle.cardTitle.copyWith(
@@ -81,7 +83,7 @@ class PropertyRow extends StatelessWidget {
             ),
           ),
         ),
-        titleAccessory,
+        if (titleAccessory != null) titleAccessory!,
       ],
     );
   }
@@ -91,7 +93,7 @@ class PropertyRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         _buildValue(),
-        valueAccessory,
+        if (valueAccessory != null) valueAccessory!,
       ],
     );
   }
@@ -113,13 +115,14 @@ class PropertyRow extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            valueCompanion,
-            style: CustomTextStyle.cardValueCompanion
-                .copyWith(color: Colors.grey),
-          ),
+          if (valueCompanion != null)
+            Text(
+              valueCompanion!,
+              style: CustomTextStyle.cardValueCompanion
+                  .copyWith(color: Colors.grey),
+            ),
         ],
       ),
     );
-    }
+  }
 }

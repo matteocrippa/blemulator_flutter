@@ -3,10 +3,10 @@ import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator/blemulator.dart';
 
 class BleAdapterInjector {
-  static BleAdapter _instance;
+  static BleAdapter? _instance;
 
   static BleAdapter get inject {
     _instance ??= BleAdapter(BleManager(), Blemulator());
-    return _instance;
+    return _instance!;
   }
 }

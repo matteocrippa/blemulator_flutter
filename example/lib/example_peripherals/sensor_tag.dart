@@ -78,9 +78,9 @@ class TemperatureService extends SimulatedService {
   bool _readingTemperature = false;
 
   TemperatureService(
-      {@required String uuid,
-      @required bool isAdvertised,
-      String convenienceName})
+      {required String uuid,
+      required bool isAdvertised,
+      String? convenienceName})
       : super(
             uuid: uuid,
             isAdvertised: isAdvertised,
@@ -94,15 +94,13 @@ class TemperatureService extends SimulatedService {
                   SimulatedDescriptor(
                     uuid: '00002901-0000-1000-8000-00805f9b34fb',
                     value: Uint8List.fromList([0]),
-                    convenienceName:
-                    'Client characteristic configuration',
+                    convenienceName: 'Client characteristic configuration',
                   ),
                   SimulatedDescriptor(
                     uuid: '00002902-0000-1000-8000-00805f9b34fb',
                     value: Uint8List.fromList([0]),
                     writable: false,
-                    convenienceName:
-                    'Characteristic user description',
+                    convenienceName: 'Characteristic user description',
                   ),
                 ],
               ),
@@ -117,14 +115,14 @@ class TemperatureService extends SimulatedService {
                   convenienceName: 'IR Temperature Period'),
             ],
             convenienceName: convenienceName) {
-    characteristicByUuid(_temperatureConfigUuid).monitor().listen((value) {
+    characteristicByUuid(_temperatureConfigUuid)?.monitor().listen((value) {
       _readingTemperature = value[0] == 1;
 
       if (_readingTemperature) {
         var temperatureDataCharacteristic =
             characteristicByUuid(_temperatureDataUuid);
 
-        temperatureDataCharacteristic.write(
+        temperatureDataCharacteristic?.write(
           Uint8List.fromList([0, 0, 100, Random().nextInt(255)]),
           sendNotification: false,
         );
@@ -137,19 +135,20 @@ class TemperatureService extends SimulatedService {
   void _emitTemperature() async {
     while (true) {
       var delayBytes =
-          await characteristicByUuid(_temperaturePeriodUuid).read();
-      var delay = delayBytes[0] * 10;
+          await characteristicByUuid(_temperaturePeriodUuid)?.read();
+      var delay = delayBytes?[0] ?? 0 * 10;
       await Future.delayed(Duration(milliseconds: delay));
 
       var temperatureDataCharacteristic =
           characteristicByUuid(_temperatureDataUuid);
 
-      if (temperatureDataCharacteristic.isNotifying) {
+      if (temperatureDataCharacteristic?.isNotifying ?? false) {
         if (_readingTemperature) {
           await temperatureDataCharacteristic
-              .write(Uint8List.fromList([0, 0, 100, Random().nextInt(255)]));
+              ?.write(Uint8List.fromList([0, 0, 100, Random().nextInt(255)]));
         } else {
-          await temperatureDataCharacteristic.write(Uint8List.fromList([0, 0, 0, 0]));
+          await temperatureDataCharacteristic
+              ?.write(Uint8List.fromList([0, 0, 0, 0]));
         }
       }
     }
@@ -158,7 +157,7 @@ class TemperatureService extends SimulatedService {
 
 class BooleanCharacteristic extends SimulatedCharacteristic {
   BooleanCharacteristic(
-      {@required uuid, @required bool initialValue, String convenienceName})
+      {required uuid, required bool initialValue, String? convenienceName})
       : super(
             uuid: uuid,
             value: Uint8List.fromList([initialValue ? 1 : 0]),

@@ -2,6 +2,6 @@ import 'package:blemulator_example/styles/custom_sizes.dart';
 import 'package:flutter/widgets.dart';
 
 class TitleImageIcon extends ImageIcon {
-  TitleImageIcon(ImageProvider image, {Color color})
+  TitleImageIcon(ImageProvider image, {required Color color})
       : super(image, size: CustomSizes.titleIcon, color: color);
 }

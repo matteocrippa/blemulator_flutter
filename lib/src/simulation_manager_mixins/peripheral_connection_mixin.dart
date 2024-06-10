@@ -1,7 +1,9 @@
 part of internal;
 
 mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
-  final Map<String, StreamSubscription> _connectionStateSubscriptions = {};
+  final Map<String,
+          StreamSubscription<flutter_ble_lib.PeripheralConnectionState>?>
+      _connectionStateSubscriptions = {};
 
   Future<void> _connectToDevice(String identifier) async {
     await _errorIfUnknown(identifier);
@@ -22,10 +24,10 @@ mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
     _connectionStateSubscriptions.putIfAbsent(
         identifier,
         () => _peripherals[identifier]
-                .connectionStateStream
+                ?.connectionStateStream
                 .listen((connectionState) {
               _bridge.publishConnectionState(
-                  _peripherals[identifier], connectionState);
+                  _peripherals[identifier]!, connectionState);
 
               if (connectionState ==
                   flutter_ble_lib.PeripheralConnectionState.disconnected) {
@@ -43,6 +45,6 @@ mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
   Future<void> _disconnectOrCancelConnection(String identifier) async {
     await _errorIfUnknown(identifier);
     await _errorIfNotConnected(identifier);
-    return _peripherals[identifier]?.onDisconnect();
+    await _peripherals[identifier]?.onDisconnect();
   }
 }

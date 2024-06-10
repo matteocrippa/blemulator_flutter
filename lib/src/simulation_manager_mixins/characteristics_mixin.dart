@@ -1,9 +1,9 @@
 part of internal;
 
 mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
-  Future<SimulatedCharacteristic> _findCharacteristicForId(
+  Future<SimulatedCharacteristic?> _findCharacteristicForId(
       int characteristicIdentifier) async {
-    SimulatedCharacteristic targetCharacteristic;
+    SimulatedCharacteristic? targetCharacteristic;
 
     for (var peripheral in _peripherals.values) {
       var characteristic = peripheral.characteristic(characteristicIdentifier);
@@ -11,12 +11,12 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
       await _errorIfNotConnected(peripheral.id);
       targetCharacteristic = characteristic;
       break;
-        }
+    }
 
     return targetCharacteristic;
   }
 
-  SimulatedCharacteristic _findCharacteristicForServiceId(
+  SimulatedCharacteristic? _findCharacteristicForServiceId(
     int serviceIdentifier,
     String characteristicUuid,
   ) {
@@ -24,12 +24,9 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
       var characteristic =
           peripheral.service(serviceIdentifier).characteristics().firstWhere(
                 (characteristic) => characteristic.uuid == characteristicUuid,
-                orElse: () => null,
               );
 
-      if (characteristic != null) {
-        return characteristic;
-      }
+      return characteristic;
     }
     return null;
   }

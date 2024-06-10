@@ -27,8 +27,8 @@ Map<String, dynamic> mapToCharacteristicJson(
       () => characteristic
           .descriptors()
           .map(
-            (descriptor) => mapToDescriptorJson(
-                DescriptorResponse(peripheralId, descriptor, null)),
+            (descriptor) => mapToDescriptorJson(DescriptorResponse(
+                peripheralId, descriptor, Uint8List.fromList([]))),
           )
           .toList(),
     );

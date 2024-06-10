@@ -264,13 +264,13 @@ class PlatformToDartBridge {
         call.arguments[SimulationArgumentName.transactionId],
       );
 
-  Future<int> _readRssiForDevice(MethodCall call) {
+  Future<int?> _readRssiForDevice(MethodCall call) {
     return _manager._readRssiForDevice(
       call.arguments[ArgumentName.id] as String,
     );
   }
 
-  Future<int> _requestMtuForDevice(MethodCall call) {
+  Future<int?> _requestMtuForDevice(MethodCall call) {
     return _manager.requestMtuForDevice(
       call.arguments[SimulationArgumentName.deviceIdentifier] as String,
       call.arguments[SimulationArgumentName.mtu] as int,

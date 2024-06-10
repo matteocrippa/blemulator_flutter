@@ -11,13 +11,13 @@ abstract class SimulationManagerBase {
 
   SimulationManagerBase(this._bridge);
 
-  Future<T> _saveCancelableOperation<T>(
+  Future<T?> _saveCancelableOperation<T>(
     String transactionId,
     CancelableFuture<T> cancelableFuture,
   ) async {
     await cancelTransactionIfExists(transactionId);
 
-    var operation =
+    final operation =
         CancelableOperation<T>.fromFuture(cancelableFuture(), onCancel: () {
       return Future.error(SimulatedBleError(
         BleErrorCode.OperationCancelled,
@@ -38,22 +38,19 @@ abstract class SimulationManagerBase {
     );
   }
 
-  SimulatedPeripheral _findPeripheralWithServiceId(int id) =>
+  SimulatedPeripheral? _findPeripheralWithServiceId(int id) =>
       _peripherals.values.firstWhere(
         (peripheral) => peripheral.hasService(id),
-        orElse: () => null,
       );
 
-  SimulatedPeripheral _findPeripheralWithCharacteristicId(int id) =>
+  SimulatedPeripheral? _findPeripheralWithCharacteristicId(int id) =>
       _peripherals.values.firstWhere(
         (peripheral) => peripheral.hasCharacteristic(id),
-        orElse: () => null,
       );
 
-  SimulatedPeripheral _findPeripheralWithDescriptorId(int id) =>
+  SimulatedPeripheral? _findPeripheralWithDescriptorId(int id) =>
       _peripherals.values.firstWhere(
         (peripheral) => peripheral.hasDescriptor(id),
-        orElse: () => null,
       );
 
   Future<void> cancelTransactionIfExists(String transactionId) async {
@@ -67,11 +64,11 @@ abstract class SimulationManagerBase {
 
   Future<void> _cancelMonitoringTransactionIfExists(
       String transactionId) async {
-    var subscription = _monitoringSubscriptions.remove(transactionId);
+    final subscription = _monitoringSubscriptions.remove(transactionId);
     if (subscription != null) {
       await subscription.subscription.cancel();
       await _bridge.publishCharacteristicMonitoringError(
-        _findPeripheralWithCharacteristicId(subscription.characteristicId).id,
+        _findPeripheralWithCharacteristicId(subscription.characteristicId)?.id,
         subscription.characteristicId,
         SimulatedBleError(
           BleErrorCode.OperationCancelled,

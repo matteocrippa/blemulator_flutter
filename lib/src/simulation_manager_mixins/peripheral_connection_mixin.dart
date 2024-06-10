@@ -11,10 +11,10 @@ mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
     await _errorIfConnected(identifier);
 
     await _errorIfCannotConnect(identifier);
-    await _peripherals[identifier].onConnect();
+    await _peripherals[identifier]?.onConnect();
 
     if (Platform.isIOS) {
-      await _peripherals[identifier].requestMtu(max_mtu);
+      await _peripherals[identifier]?.requestMtu(max_mtu);
     }
   }
 
@@ -29,7 +29,7 @@ mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
 
               if (connectionState ==
                   flutter_ble_lib.PeripheralConnectionState.disconnected) {
-                _connectionStateSubscriptions[identifier].cancel();
+                _connectionStateSubscriptions[identifier]?.cancel();
                 _connectionStateSubscriptions.remove(identifier);
               }
             }));
@@ -37,12 +37,12 @@ mixin PeripheralConnectionMixin on SimulationManagerBaseWithErrorChecks {
 
   Future<bool> _isDeviceConnected(String identifier) async {
     await _errorIfUnknown(identifier);
-    return _peripherals[identifier].isConnected();
+    return _peripherals[identifier]?.isConnected() ?? false;
   }
 
   Future<void> _disconnectOrCancelConnection(String identifier) async {
     await _errorIfUnknown(identifier);
     await _errorIfNotConnected(identifier);
-    return _peripherals[identifier].onDisconnect();
+    return _peripherals[identifier]?.onDisconnect();
   }
 }

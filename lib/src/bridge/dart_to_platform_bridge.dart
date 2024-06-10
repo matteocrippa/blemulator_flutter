@@ -68,7 +68,7 @@ class DartToPlatformBridge {
       );
 
   Future<void> publishCharacteristicMonitoringError(
-    String peripheralId,
+    String? peripheralId,
     int characteristicId,
     SimulatedBleError bleError,
     String transactionId,

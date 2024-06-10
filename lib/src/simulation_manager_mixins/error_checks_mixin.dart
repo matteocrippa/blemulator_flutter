@@ -48,7 +48,27 @@ mixin ErrorChecksMixin on SimulationManagerBase {
     }
   }
 
-  Future<void> _errorIfPeripheralNull(SimulatedPeripheral peripheral) async {}
+  Future<void> _errorIfPeripheralNull(SimulatedPeripheral? peripheral) async {
+    return peripheral == null
+        ? Future.error(
+            SimulatedBleError(
+              BleErrorCode.DeviceNotFound,
+              'Peripheral not found',
+            ),
+          )
+        : null;
+  }
+
+  Future<void> _errorIfDiscoveryNull(SimulatedPeripheral? peripheral) async {
+    return peripheral == null
+        ? Future.error(
+            SimulatedBleError(
+              BleErrorCode.CharacteristicsNotDiscovered,
+              'Discovery was not done on peripheral',
+            ),
+          )
+        : null;
+  }
 
   Future<void> _errorIfDiscoveryNotDone(SimulatedPeripheral peripheral) async {
     if (!peripheral.discoveryDone) {
@@ -86,9 +106,18 @@ mixin ErrorChecksMixin on SimulationManagerBase {
   }
 
   Future<void> _errorIfCharacteristicIsNull(
-    SimulatedCharacteristic characteristic,
+    SimulatedCharacteristic? characteristic,
     String characteristicId,
-  ) async {}
+  ) async {
+    if (characteristic == null) {
+      return Future.error(
+        SimulatedBleError(
+          BleErrorCode.CharacteristicNotFound,
+          'Characteristic $characteristicId not found',
+        ),
+      );
+    }
+  }
 
   Future<void> _errorIfCharacteristicNotReadable(
       SimulatedCharacteristic characteristic) async {
@@ -139,11 +168,20 @@ mixin ErrorChecksMixin on SimulationManagerBase {
     }
   }
 
+  Future<void> _errorIfDescriptorNotNull(
+      SimulatedDescriptor? descriptor) async {
+    if (descriptor != null) {
+      return Future.error(
+        SimulatedBleError(
+          BleErrorCode.DescriptorNotFound,
+          'Descriptor already exists',
+        ),
+      );
+    }
+  }
+
   Future<void> _errorIfDescriptorNotFound(
-    SimulatedDescriptor descriptor, {
-    required String descriptorUuid,
-    required int descriptorId,
-  }) async {}
+      SimulatedDescriptor descriptor) async {}
 
   Future<void> _errorIfDescriptorNotWritable(
       SimulatedDescriptor descriptor) async {

@@ -150,8 +150,8 @@ class PlatformToDartBridge {
         )
         .then((characteristic) => mapToCharacteristicJson(
               arguments[SimulationArgumentName.deviceIdentifier],
-              characteristic.characteristic,
-              characteristic.value,
+              characteristic?.characteristic,
+              characteristic?.value,
             ));
   }
 
@@ -168,8 +168,8 @@ class PlatformToDartBridge {
         )
         .then((characteristic) => mapToCharacteristicJson(
               arguments[SimulationArgumentName.deviceIdentifier],
-              characteristic.characteristic,
-              characteristic.value,
+              characteristic?.characteristic,
+              characteristic?.value,
             ));
   }
 
@@ -184,8 +184,8 @@ class PlatformToDartBridge {
         )
         .then((characteristicResponse) => mapToCharacteristicJson(
               arguments[SimulationArgumentName.deviceIdentifier],
-              characteristicResponse.characteristic,
-              characteristicResponse.value,
+              characteristicResponse?.characteristic,
+              characteristicResponse?.value,
             ));
   }
 

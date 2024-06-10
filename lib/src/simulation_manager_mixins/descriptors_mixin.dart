@@ -1,17 +1,18 @@
 part of internal;
 
 mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
-  Future<DescriptorResponse> _readDescriptorForIdentifier(
+  Future<DescriptorResponse?> _readDescriptorForIdentifier(
     int descriptorIdentifier,
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
         var peripheral = _findPeripheralWithDescriptorId(descriptorIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
         var descriptor = peripheral.descriptor(descriptorIdentifier);
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotReadable(descriptor);
 
         var value = await descriptor.read();
@@ -21,18 +22,18 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
         return DescriptorResponse(peripheral.id, descriptor, value);
       });
 
-  Future<DescriptorResponse> _readDescriptorForCharacteristic(
+  Future<DescriptorResponse?> _readDescriptorForCharacteristic(
     int characteristicIdentifier,
     String descriptorUuid,
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral =
+        final peripheral =
             _findPeripheralWithCharacteristicId(characteristicIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var characteristic =
+        final characteristic =
             peripheral.characteristic(characteristicIdentifier);
 
         await _errorIfCharacteristicIsNull(
@@ -40,50 +41,53 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
           characteristicIdentifier.toString(),
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
-        await _errorIfDescriptorNotFound(descriptor);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotReadable(descriptor);
 
-        var value = await descriptor.read();
+        final value = await descriptor.read();
 
         await _errorIfDisconnected(peripheral.id);
 
         return DescriptorResponse(peripheral.id, descriptor, value);
       });
 
-  Future<DescriptorResponse> _readDescriptorForService(
+  Future<DescriptorResponse?> _readDescriptorForService(
     int serviceIdentifier,
     String characteristicUuid,
     String descriptorUuid,
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral = _findPeripheralWithServiceId(serviceIdentifier);
+        final peripheral = _findPeripheralWithServiceId(serviceIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var service = peripheral.service(serviceIdentifier);
+        final service = peripheral.service(serviceIdentifier);
 
-        var characteristic = service.characteristicByUuid(characteristicUuid);
+        final characteristic =
+            service?.characteristicByUuid(characteristicUuid);
 
         await _errorIfCharacteristicIsNull(
           characteristic,
           characteristicUuid,
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
 
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotReadable(descriptor);
 
-        var value = await descriptor.read();
+        final value = await descriptor.read();
 
         await _errorIfDisconnected(peripheral.id);
 
         return DescriptorResponse(peripheral.id, descriptor, value);
       });
 
-  Future<DescriptorResponse> _readDescriptorForDevice(
+  Future<DescriptorResponse?> _readDescriptorForDevice(
     String deviceIdentifier,
     String serviceUuid,
     String characteristicUuid,
@@ -91,11 +95,11 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral = _peripherals[deviceIdentifier];
+        final peripheral = _peripherals[deviceIdentifier];
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var characteristic = peripheral.getCharacteristicForService(
+        final characteristic = peripheral?.getCharacteristicForService(
             serviceUuid, characteristicUuid);
 
         await _errorIfCharacteristicIsNull(
@@ -103,19 +107,20 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
           characteristicUuid,
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
 
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotReadable(descriptor);
 
-        var value = await descriptor.read();
+        final value = await descriptor.read();
 
         await _errorIfDisconnected(peripheral.id);
 
         return DescriptorResponse(peripheral.id, descriptor, value);
       });
 
-  Future<DescriptorResponse> _writeDescriptorForIdentifier(
+  Future<DescriptorResponse?> _writeDescriptorForIdentifier(
     int descriptorIdentifier,
     Uint8List value,
     String transactionId,
@@ -123,32 +128,34 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
       _saveCancelableOperation(transactionId, () async {
         var peripheral = _findPeripheralWithDescriptorId(descriptorIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var descriptor = peripheral.descriptor(descriptorIdentifier);
-        await _errorIfDescriptorNotFound(descriptor);
+        final descriptor = peripheral.descriptor(descriptorIdentifier);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotWritable(descriptor);
 
         await descriptor.write(value);
 
         await _errorIfDisconnected(peripheral.id);
 
-        return DescriptorResponse(peripheral.id, descriptor, null);
+        return DescriptorResponse(
+            peripheral.id, descriptor, Uint8List.fromList([]));
       });
 
-  Future<DescriptorResponse> _writeDescriptorForCharacteristic(
+  Future<DescriptorResponse?> _writeDescriptorForCharacteristic(
     int characteristicIdentifier,
     String descriptorUuid,
     Uint8List value,
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral =
+        final peripheral =
             _findPeripheralWithCharacteristicId(characteristicIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var characteristic =
+        final characteristic =
             peripheral.characteristic(characteristicIdentifier);
 
         await _errorIfCharacteristicIsNull(
@@ -156,19 +163,21 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
           characteristicIdentifier.toString(),
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
 
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotWritable(descriptor);
 
         await descriptor.write(value);
 
         await _errorIfDisconnected(peripheral.id);
 
-        return DescriptorResponse(peripheral.id, descriptor, null);
+        return DescriptorResponse(
+            peripheral.id, descriptor, Uint8List.fromList([]));
       });
 
-  Future<DescriptorResponse> _writeDescriptorForService(
+  Future<DescriptorResponse?> _writeDescriptorForService(
     int serviceIdentifier,
     String characteristicUuid,
     String descriptorUuid,
@@ -176,32 +185,35 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral = _findPeripheralWithServiceId(serviceIdentifier);
+        final peripheral = _findPeripheralWithServiceId(serviceIdentifier);
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var service = peripheral.service(serviceIdentifier);
+        final service = peripheral.service(serviceIdentifier);
 
-        var characteristic = service.characteristicByUuid(characteristicUuid);
+        final characteristic =
+            service?.characteristicByUuid(characteristicUuid);
 
         await _errorIfCharacteristicIsNull(
           characteristic,
           characteristicUuid,
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
 
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotWritable(descriptor);
 
         await descriptor.write(value);
 
         await _errorIfDisconnected(peripheral.id);
 
-        return DescriptorResponse(peripheral.id, descriptor, null);
+        return DescriptorResponse(
+            peripheral.id, descriptor, Uint8List.fromList([]));
       });
 
-  Future<DescriptorResponse> _writeDescriptorForDevice(
+  Future<DescriptorResponse?> _writeDescriptorForDevice(
     String deviceIdentifier,
     String serviceUuid,
     String characteristicUuid,
@@ -210,11 +222,11 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
     String transactionId,
   ) =>
       _saveCancelableOperation(transactionId, () async {
-        var peripheral = _peripherals[deviceIdentifier];
+        final peripheral = _peripherals[deviceIdentifier];
         await _errorIfPeripheralNull(peripheral);
-        await _errorIfNotConnected(peripheral.id);
+        await _errorIfNotConnected(peripheral!.id);
 
-        var characteristic = peripheral.getCharacteristicForService(
+        final characteristic = peripheral.getCharacteristicForService(
             serviceUuid, characteristicUuid);
 
         await _errorIfCharacteristicIsNull(
@@ -222,15 +234,17 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
           characteristicUuid,
         );
 
-        var descriptor = characteristic.descriptorByUuid(descriptorUuid);
+        final descriptor = characteristic?.descriptorByUuid(descriptorUuid);
 
-        await _errorIfDescriptorNotFound(descriptor);
+        await _errorIfDescriptorNotNull(descriptor);
+        await _errorIfDescriptorNotFound(descriptor!);
         await _errorIfDescriptorNotWritable(descriptor);
 
         await descriptor.write(value);
 
         await _errorIfDisconnected(peripheral.id);
 
-        return DescriptorResponse(peripheral.id, descriptor, null);
+        return DescriptorResponse(
+            peripheral.id, descriptor, Uint8List.fromList([]));
       });
 }

@@ -7,50 +7,49 @@ import '../../factory/simulation_manager_factory.dart';
 void main() {
   const DEVICE_ID = 'qwe123';
   const MTU = 33;
-  PeripheralMtuMixin peripheralMtuMixin;
+  late PeripheralMtuMixin peripheralMtuMixin;
 
   setUp(() {
-     peripheralMtuMixin = SimulationManagerFactory().create()
-      ..addSimulatedPeripheral(
-          (SimulatedPeripheralBuilder()
+    peripheralMtuMixin = SimulationManagerFactory().create()
+      ..addSimulatedPeripheral((SimulatedPeripheralBuilder()
             ..isConnected = true
             ..mtu = MTU
             ..deviceId = DEVICE_ID)
-          .build()
-      );
-
+          .build());
   });
 
   test('should change MTU', () async {
-    //given
+    // given
     const newMtu = 119;
 
-    //when
+    // when
     var mtu = await peripheralMtuMixin.requestMtuForDevice(DEVICE_ID, newMtu);
 
-    //then
+    // then
     expect(mtu, newMtu);
   });
 
   test('should not allow to request MTU over 512', () async {
-    //given
+    // given
     const maxMtu = 512;
 
-    //when
-    var mtu = await peripheralMtuMixin.requestMtuForDevice(DEVICE_ID, maxMtu + 1);
+    // when
+    var mtu =
+        await peripheralMtuMixin.requestMtuForDevice(DEVICE_ID, maxMtu + 1);
 
-    //then
+    // then
     expect(mtu, maxMtu);
   });
 
   test('should not allow to request MTU below 23', () async {
-    //given
+    // given
     const minMtu = 23;
 
-    //when
-    var mtu = await peripheralMtuMixin.requestMtuForDevice(DEVICE_ID, minMtu - 23);
+    // when
+    var mtu =
+        await peripheralMtuMixin.requestMtuForDevice(DEVICE_ID, minMtu - 1);
 
-    //then
+    // then
     expect(mtu, minMtu);
   });
 }

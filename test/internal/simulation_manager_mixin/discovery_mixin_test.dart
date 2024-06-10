@@ -10,7 +10,7 @@ class MockedPeripheral extends Mock implements SimulatedPeripheral {}
 
 void main() {
   const DEVICE_ID = 'qwe123';
-  DiscoveryMixin discoveryMixin;
+  late DiscoveryMixin discoveryMixin;
   var mockedPeripheral;
 
   setUp(() {

@@ -58,10 +58,8 @@ void main() {
   }
 
   void cancelBlePeripheralSubscription() {
-    if (blePeripheralsSubscription != null) {
-      blePeripheralsSubscription.cancel();
+    blePeripheralsSubscription.cancel();
     }
-  }
 
   tearDown(() {
     scanResultStreamController.close();

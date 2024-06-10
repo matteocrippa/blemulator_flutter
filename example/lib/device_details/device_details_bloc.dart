@@ -257,7 +257,7 @@ class DeviceDetailsBloc {
   }
 
   void dispose() async {
-    _deviceController.value?.abandon();
+    _deviceController.value.abandon();
     await _deviceController.drain();
     await _deviceController.close();
 

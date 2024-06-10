@@ -28,7 +28,7 @@ class SimulatedDescriptor {
 
   Future<void> write(Uint8List value) async {
     _value = value;
-    if (_streamController?.hasListener == true) {
+    if (_streamController.hasListener == true) {
       _streamController.add(_value);
     }
   }

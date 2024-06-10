@@ -48,7 +48,7 @@ class DevicesBloc {
     _devicePickerSubscription.cancel();
     _visibleDevicesController.close();
     _devicePickerController.close();
-    _scanSubscription?.cancel();
+    _scanSubscription.cancel();
   }
 
   void init() {
@@ -58,7 +58,7 @@ class DevicesBloc {
         .createClient(
             restoreStateIdentifier: 'example-restore-state-identifier',
             restoreStateAction: (peripherals) {
-              peripherals?.forEach((peripheral) {
+              peripherals.forEach((peripheral) {
                 Fimber.d('Restored peripheral: ${peripheral.name}');
               });
             })

@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:blemulator_example/devices_list/hex_painter.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 
 import 'devices_bloc.dart';
-import 'devices_bloc_provider.dart';
 
 typedef DeviceTapListener = void Function();
 
@@ -51,13 +49,6 @@ class DeviceListScreenState extends State<DevicesListScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     Fimber.d('DeviceListScreenState didChangeDependencies');
-    if (_devicesBloc == null) {
-      _devicesBloc = DevicesBlocProvider.of(context);
-      if (_shouldRunOnResume) {
-        _shouldRunOnResume = false;
-        _onResume();
-      }
-    }
   }
 
   @override
@@ -133,7 +124,7 @@ class DevicesList extends ListView {
               padding: const EdgeInsets.all(8.0),
               child: Image.asset('assets/ti_logo.png'),
             ),
-            backgroundColor: Theme.of(context).accentColor);
+            backgroundColor: Theme.of(context).colorScheme.secondary);
       case DeviceCategory.hex:
         return CircleAvatar(
             child: CustomPaint(painter: HexPainter(), size: Size(20, 24)),

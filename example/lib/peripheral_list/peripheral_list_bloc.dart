@@ -57,10 +57,8 @@ class PeripheralListBloc
   }
 
   void _cancelBlePeripheralSubscription() async {
-    if (_blePeripheralsSubscription != null) {
-      await _blePeripheralsSubscription.cancel();
+    await _blePeripheralsSubscription.cancel();
     }
-  }
 
   @override
   Future<void> close() {

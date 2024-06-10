@@ -5,7 +5,6 @@ import 'package:blemulator_example/peripheral_details/peripheral_details_event.d
 import 'package:blemulator_example/peripheral_details/peripheral_details_state.dart';
 import 'package:blemulator_example/styles/custom_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ServicesSliver extends StatelessWidget {

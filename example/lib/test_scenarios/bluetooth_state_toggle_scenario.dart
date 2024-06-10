@@ -39,13 +39,13 @@ class BluetoothStateTestScenario implements TestScenario {
     log('Disabled radio!');
 
     log('Destroying client');
-    await _radioStateSubscription?.cancel();
+    await _radioStateSubscription.cancel();
     await bleManager.destroyClient();
     log('Destroyed client!');
   }
 
   void _observeRadioState(BleManager bleManager, Logger log) async {
-    await _radioStateSubscription?.cancel();
+    await _radioStateSubscription.cancel();
     _radioStateSubscription =
         bleManager.observeBluetoothState().listen((newState) {
       log('New radio state: $newState');

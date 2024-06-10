@@ -1,7 +1,6 @@
 import 'package:blemulator_example/model/ble_service.dart';
 import 'package:blemulator_example/styles/custom_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CharacteristicsView extends StatelessWidget {
   final BleCharacteristic _characteristic;

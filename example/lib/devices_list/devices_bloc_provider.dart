@@ -18,7 +18,7 @@ class DevicesBlocProvider extends InheritedWidget {
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
 
   static DevicesBloc of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(DevicesBlocProvider)
+      (context.dependOnInheritedWidgetOfExactType<DevicesBlocProvider>()
               as DevicesBlocProvider)
           .devicesBloc;
 }

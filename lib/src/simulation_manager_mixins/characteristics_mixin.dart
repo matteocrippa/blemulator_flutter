@@ -8,12 +8,10 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
     for (var peripheral in _peripherals.values) {
       var characteristic = peripheral.characteristic(characteristicIdentifier);
 
-      if (characteristic != null) {
-        await _errorIfNotConnected(peripheral.id);
-        targetCharacteristic = characteristic;
-        break;
-      }
-    }
+      await _errorIfNotConnected(peripheral.id);
+      targetCharacteristic = characteristic;
+      break;
+        }
 
     return targetCharacteristic;
   }
@@ -24,7 +22,7 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
   ) {
     for (var peripheral in _peripherals.values) {
       var characteristic =
-          peripheral.service(serviceIdentifier)?.characteristics()?.firstWhere(
+          peripheral.service(serviceIdentifier).characteristics().firstWhere(
                 (characteristic) => characteristic.uuid == characteristicUuid,
                 orElse: () => null,
               );
@@ -239,7 +237,7 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
 
               await _monitoringSubscriptions[transactionId]
                   ?.subscription
-                  ?.cancel();
+                  .cancel();
               _monitoringSubscriptions.remove(transactionId);
             }
           },
@@ -299,7 +297,7 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
 
               await _monitoringSubscriptions[transactionId]
                   ?.subscription
-                  ?.cancel();
+                  .cancel();
               _monitoringSubscriptions.remove(transactionId);
             }
           },
@@ -358,7 +356,7 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
 
               await _monitoringSubscriptions[transactionId]
                   ?.subscription
-                  ?.cancel();
+                  .cancel();
               _monitoringSubscriptions.remove(transactionId);
             }
           },

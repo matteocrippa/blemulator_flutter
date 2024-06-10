@@ -8,7 +8,7 @@ abstract class BleDevice {
   int counter = 0;
   final String name;
   DeviceCategory _category;
-  bool _isConnected = false;
+  final bool _isConnected = false;
   Peripheral peripheral;
 
   bool get isConnected => _isConnected;
@@ -17,7 +17,6 @@ abstract class BleDevice {
 
   BleDevice(this.name, this.id, this.peripheral) {
     _category = _nameToCategory(name);
-    if (name == null) {}
   }
 
   factory BleDevice.connected(BleDevice bleDevice) {
@@ -33,7 +32,7 @@ abstract class BleDevice {
   DeviceCategory _nameToCategory(String name) {
     if (name == 'SensorTag') {
       return DeviceCategory.sensorTag;
-    } else if (name != null && name.startsWith('Hex')) {
+    } else if (name.startsWith('Hex')) {
       return DeviceCategory.hex;
     } else {
       return DeviceCategory.other;
@@ -46,8 +45,6 @@ abstract class BleDevice {
   @override
   bool operator ==(other) =>
       other is BleDevice &&
-      name != null &&
-      other.name != null &&
       compareAsciiLowerCase(name, other.name) == 0 &&
       id == other.id;
 
@@ -72,7 +69,7 @@ class DisconnectedBleDevice extends BleDevice {
 
   @override
   void abandon() {
-    _devicesInConnectingProcess?.close();
+    _devicesInConnectingProcess.close();
   }
 }
 

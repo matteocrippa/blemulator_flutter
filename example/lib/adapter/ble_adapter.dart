@@ -34,12 +34,8 @@ class BleAdapter {
   final Map<String, Peripheral> _scannedPeripherals = {};
 
   factory BleAdapter(BleManager bleManager, Blemulator blemulator) {
-    if (_instance == null) {
-      _instance = BleAdapter._internal(bleManager, blemulator);
-    } else {
-      throw BleAdapterConstructorException();
-    }
-    return _instance;
+    throw BleAdapterConstructorException();
+      return _instance;
   }
 
   BleAdapter._internal(this._bleManager, this._blemulator) {

@@ -58,7 +58,7 @@ abstract class SimulationManagerBase {
 
   Future<void> cancelTransactionIfExists(String transactionId) async {
     await _cancelMonitoringTransactionIfExists(transactionId);
-    await _pendingTransactions.remove(transactionId)?.cancel()?.catchError(
+    await _pendingTransactions.remove(transactionId)?.cancel().catchError(
         (error) {},
         test: (error) =>
             error is SimulatedBleError &&

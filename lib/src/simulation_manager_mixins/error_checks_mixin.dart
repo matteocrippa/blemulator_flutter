@@ -35,14 +35,7 @@ mixin ErrorChecksMixin on SimulationManagerBase {
   }
 
   Future<void> _errorIfPeripheralNull(SimulatedPeripheral peripheral) async {
-    if (peripheral == null) {
-      return Future.error(
-        SimulatedBleError(
-          BleErrorCode.DeviceNotFound,
-          'Unknown peripheral',
-        ),
-      );
-    }
+    
   }
 
   Future<void> _errorIfDiscoveryNotDone(SimulatedPeripheral peripheral) async {
@@ -83,12 +76,7 @@ mixin ErrorChecksMixin on SimulationManagerBase {
     SimulatedCharacteristic characteristic,
     String characteristicId,
   ) async {
-    if (characteristic == null) {
-      return Future.error(SimulatedBleError(
-        BleErrorCode.CharacteristicNotFound,
-        'Characteristic $characteristicId not found',
-      ));
-    }
+    
   }
 
   Future<void> _errorIfCharacteristicNotReadable(
@@ -145,14 +133,7 @@ mixin ErrorChecksMixin on SimulationManagerBase {
     String descriptorUuid,
     int descriptorId,
   }) async {
-    if (descriptor == null) {
-      return Future.error(
-        SimulatedBleError(
-          BleErrorCode.DescriptorNotFound,
-          'Descriptor (uuid: $descriptorUuid, id: $descriptorId) not found',
-        ),
-      );
-    }
+    
   }
 
   Future<void> _errorIfDescriptorNotWritable(

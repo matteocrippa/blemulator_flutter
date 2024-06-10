@@ -41,18 +41,14 @@ class PropertyRow extends StatelessWidget {
   }
 
   Widget _buildCardBody() {
-    if (rowAccessory != null) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(child: _buildMainColumn()),
-          rowAccessory,
-        ],
-      );
-    } else {
-      return _buildMainColumn();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(child: _buildMainColumn()),
+        rowAccessory,
+      ],
+    );
     }
-  }
 
   Widget _buildMainColumn() {
     return Column(
@@ -71,11 +67,10 @@ class PropertyRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        if (titleIcon != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: titleIcon,
-          ),
+        Padding(
+          padding: const EdgeInsets.only(right: 4.0),
+          child: titleIcon,
+        ),
         Expanded(
           child: Text(
             title ?? '',
@@ -86,7 +81,7 @@ class PropertyRow extends StatelessWidget {
             ),
           ),
         ),
-        if (titleAccessory != null) titleAccessory,
+        titleAccessory,
       ],
     );
   }
@@ -96,44 +91,35 @@ class PropertyRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         _buildValue(),
-        if (valueAccessory != null) valueAccessory,
+        valueAccessory,
       ],
     );
   }
 
   Widget _buildValue() {
-    if (valueCompanion != null) {
-      return Expanded(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: <Widget>[
-            Flexible(
-              fit: FlexFit.loose,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 4.0),
-                child: Text(
-                  value ?? '',
-                  textWidthBasis: TextWidthBasis.longestLine,
-                  style: valueTextStyle,
-                ),
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.loose,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 4.0),
+              child: Text(
+                value ?? '',
+                textWidthBasis: TextWidthBasis.longestLine,
+                style: valueTextStyle,
               ),
             ),
-            Text(
-              valueCompanion,
-              style: CustomTextStyle.cardValueCompanion
-                  .copyWith(color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Expanded(
-        child: Text(
-          value ?? '',
-          style: valueTextStyle,
-        ),
-      );
+          ),
+          Text(
+            valueCompanion,
+            style: CustomTextStyle.cardValueCompanion
+                .copyWith(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
     }
-  }
 }

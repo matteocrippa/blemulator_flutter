@@ -163,15 +163,11 @@ abstract class SimulatedPeripheral {
     var descriptor = _descriptors.values.firstWhere(
       (descriptor) {
         var found = descriptor.uuid.toLowerCase() == uuid.toLowerCase();
-        if (characteristicUuid != null) {
-          found = found &&
-              descriptor.characteristic.uuid.toLowerCase() ==
-                  characteristicUuid.toLowerCase();
-        }
-        if (characteristicId != null) {
-          found = found && descriptor.characteristic.id == characteristicId;
-        }
-
+        found = found &&
+            descriptor.characteristic.uuid.toLowerCase() ==
+                characteristicUuid.toLowerCase();
+              found = found && descriptor.characteristic.id == characteristicId;
+      
         return found;
       },
       orElse: () => null,
@@ -194,11 +190,9 @@ abstract class SimulatedPeripheral {
                 characteristicUuid.toLowerCase(),
             orElse: () => null);
 
-        if (characteristic != null) {
-          targetCharacteristic = characteristic;
-          break servicesLoop;
-        }
-      }
+        targetCharacteristic = characteristic;
+        break servicesLoop;
+            }
     }
     return targetCharacteristic;
   }

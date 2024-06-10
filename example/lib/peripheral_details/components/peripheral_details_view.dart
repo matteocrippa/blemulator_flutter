@@ -2,7 +2,6 @@ import 'package:blemulator_example/common/components/property_row.dart';
 import 'package:blemulator_example/peripheral_details/bloc.dart';
 import 'package:blemulator_example/peripheral_details/components/services_sliver.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PeripheralDetailsView extends StatelessWidget {

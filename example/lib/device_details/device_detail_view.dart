@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:blemulator_example/device_details/device_details_bloc.dart';
-import 'package:blemulator_example/device_details/devices_details_bloc_provider.dart';
 import 'package:blemulator_example/device_details/view/auto_test_view.dart';
 import 'package:blemulator_example/device_details/view/manual_test_view.dart';
 
@@ -23,13 +22,6 @@ class DeviceDetailsViewState extends State<DeviceDetailsView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     Fimber.d('didChangeDependencies');
-    if (_deviceDetailsBloc == null) {
-      _deviceDetailsBloc = DeviceDetailsBlocProvider.of(context);
-      if (_shouldRunOnResume) {
-        _shouldRunOnResume = false;
-        _onResume();
-      }
-    }
   }
 
   void _onResume() {

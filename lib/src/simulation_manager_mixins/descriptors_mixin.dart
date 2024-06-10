@@ -99,7 +99,7 @@ mixin DescriptorsMixin on SimulationManagerBaseWithErrorChecks {
         await _errorIfPeripheralNull(peripheral);
         await _errorIfNotConnected(peripheral!.id);
 
-        final characteristic = peripheral?.getCharacteristicForService(
+        final characteristic = peripheral.getCharacteristicForService(
             serviceUuid, characteristicUuid);
 
         await _errorIfCharacteristicIsNull(

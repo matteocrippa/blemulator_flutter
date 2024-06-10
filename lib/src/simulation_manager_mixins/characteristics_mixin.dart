@@ -204,7 +204,7 @@ mixin CharacteristicsMixin on SimulationManagerBaseWithErrorChecks {
         _findPeripheralWithCharacteristicId(characteristicIdentifier);
     await _errorIfPeripheralNull(peripheral);
     await _errorIfNotConnected(peripheral!.id);
-    await _errorIfDiscoveryNotDone(peripheral!);
+    await _errorIfDiscoveryNotDone(peripheral);
     await _errorIfCharacteristicNotNotifiable(targetCharacteristic!);
     _monitoringSubscriptions.putIfAbsent(
       transactionId,

@@ -14,7 +14,7 @@ class DevicesListScreen extends StatelessWidget {
       body: BlocBuilder<DevicesBloc, List<BleDevice>>(
         builder: (context, devices) {
           return RefreshIndicator(
-            onRefresh: () => context.read<DevicesBloc>().refresh().then((_) {}),
+            onRefresh: () => context.read<DevicesBloc>().refresh(),
             child: DevicesList(devices),
           );
         },

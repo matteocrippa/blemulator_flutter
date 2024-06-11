@@ -1,5 +1,4 @@
 import 'package:blemulator_example/device_details/device_detail_view.dart';
-import 'package:blemulator_example/device_details/devices_details_bloc_provider.dart';
 import 'package:blemulator_example/devices_list/devices_bloc.dart';
 import 'package:blemulator_example/devices_list/devices_list_view.dart';
 import 'package:blemulator_example/repository/device_repository.dart';

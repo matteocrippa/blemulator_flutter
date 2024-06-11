@@ -4,25 +4,16 @@ import 'package:fimber/fimber.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 import 'package:blemulator_example/repository/device_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator/blemulator.dart';
 import 'package:blemulator_example/example_peripherals/sensor_tag.dart';
 
-class DevicesBloc extends Bloc<Object, List<BleDevice>> {
-  final List<BleDevice> bleDevices = <BleDevice>[];
-
-  final BehaviorSubject<List<BleDevice>> _visibleDevicesController =
-      BehaviorSubject<List<BleDevice>>.seeded(<BleDevice>[]);
-
+class DevicesBloc extends Cubit<List<BleDevice>> {
   final StreamController<BleDevice> _devicePickerController =
       StreamController<BleDevice>();
 
   late StreamSubscription<ScanResult> _scanSubscription;
   late StreamSubscription<BleDevice> _devicePickerSubscription;
-
-  ValueStream<List<BleDevice>> get visibleDevices =>
-      _visibleDevicesController.stream;
 
   Sink<BleDevice> get devicePicker => _devicePickerController.sink;
 
@@ -52,14 +43,13 @@ class DevicesBloc extends Bloc<Object, List<BleDevice>> {
   void dispose() {
     Fimber.d('cancel _devicePickerSubscription');
     _devicePickerSubscription.cancel();
-    _visibleDevicesController.close();
     _devicePickerController.close();
     _scanSubscription.cancel();
   }
 
   void init() {
     Fimber.d('Init devices bloc');
-    bleDevices.clear();
+    emit([]);
     _bleManager
         .createClient(
             restoreStateIdentifier: 'example-restore-state-identifier',
@@ -79,11 +69,10 @@ class DevicesBloc extends Bloc<Object, List<BleDevice>> {
       var bleDevice = BleDevice.notConnected(scanResult.peripheral.name,
           scanResult.peripheral.identifier, scanResult.peripheral);
       if (scanResult.advertisementData.localName != null &&
-          !bleDevices.contains(bleDevice)) {
+          !state.contains(bleDevice)) {
         Fimber.d('found new device ${scanResult.advertisementData.localName}'
             ' ${scanResult.peripheral.identifier}');
-        bleDevices.add(bleDevice);
-        _visibleDevicesController.add(List<BleDevice>.from(bleDevices));
+        emit(List<BleDevice>.from(state)..add(bleDevice));
       }
     });
   }
@@ -91,8 +80,7 @@ class DevicesBloc extends Bloc<Object, List<BleDevice>> {
   Future<void> refresh() async {
     await _scanSubscription.cancel();
     await _bleManager.stopPeripheralScan();
-    bleDevices.clear();
-    _visibleDevicesController.add(List<BleDevice>.from(bleDevices));
+    emit([]);
     startScan();
   }
 }

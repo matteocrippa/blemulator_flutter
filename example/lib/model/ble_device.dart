@@ -75,7 +75,7 @@ class DisconnectedBleDevice extends BleDevice {
 
 class ConnectedBleDevice extends BleDevice {
   ConnectedBleDevice(String name, String id, Peripheral peripheral)
-      : super(name ?? '', id, peripheral);
+      : super(name, id, peripheral);
 
   @override
   void abandon() {}

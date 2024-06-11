@@ -9,17 +9,17 @@ import '../mock/sample_ble_peripheral.dart';
 import '../mock/sample_ble_service.dart';
 
 void main() {
-  PeripheralDetailsBloc peripheralDetailsBloc;
-  MockBleAdapter bleAdapter;
-  BlePeripheral peripheral;
+  late PeripheralDetailsBloc peripheralDetailsBloc;
+  late MockBleAdapter? bleAdapter;
+  late BlePeripheral peripheral;
 
   setUp(() {
     bleAdapter = MockBleAdapter();
     peripheral = SampleBlePeripheral();
-    when(bleAdapter.discoverAndGetServicesCharacteristics(peripheral.id))
+    when(bleAdapter?.discoverAndGetServicesCharacteristics(peripheral.id))
         .thenAnswer((_) => Future.value([]));
 
-    peripheralDetailsBloc = PeripheralDetailsBloc(bleAdapter, peripheral);
+    peripheralDetailsBloc = PeripheralDetailsBloc(bleAdapter!, peripheral);
   });
 
   tearDown(() {
@@ -28,15 +28,16 @@ void main() {
   });
 
   test('initial state contains peripheral provided in the constructor', () {
-    expect(peripheralDetailsBloc.initialState.peripheral, peripheral);
+    expect(peripheralDetailsBloc.state.peripheral, peripheral);
   });
 
   test('should map ServicesFetchedEvent to PeripheralDetailsState', () async {
     // given
     var bleServices = <BleService>[SampleBleService()];
     var event = ServicesFetchedEvent(bleServices);
-    var states =
-        bleServices.map((service) => BleServiceState(service: service, expanded: false)).toList();
+    var states = bleServices
+        .map((service) => BleServiceState(service: service, expanded: false))
+        .toList();
 
     var expectedState = PeripheralDetailsState(
         peripheral: peripheral, bleServiceStates: states);
@@ -51,7 +52,9 @@ void main() {
     );
   });
 
-  test('should map ServiceViewExpandedEvent to PeripheralDetailsState when view expanded', () async {
+  test(
+      'should map ServiceViewExpandedEvent to PeripheralDetailsState when view expanded',
+      () async {
     // given
     var service = SampleBleService();
     var newBleServiceState = BleServiceState(service: service, expanded: true);
@@ -71,7 +74,9 @@ void main() {
     );
   });
 
-  test('should map ServiceViewExpandedEvent to PeripheralDetailsState when view collapsed', () async {
+  test(
+      'should map ServiceViewExpandedEvent to PeripheralDetailsState when view collapsed',
+      () async {
     // given
     var service = SampleBleService();
     var newBleServiceState = BleServiceState(service: service, expanded: false);

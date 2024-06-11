@@ -11,14 +11,14 @@ import 'package:blemulator_example/example_peripherals/sensor_tag.dart';
 class DevicesBloc {
   final List<BleDevice> bleDevices = <BleDevice>[];
 
-  BehaviorSubject<List<BleDevice>> _visibleDevicesController =
+  final BehaviorSubject<List<BleDevice>> _visibleDevicesController =
       BehaviorSubject<List<BleDevice>>.seeded(<BleDevice>[]);
 
-  StreamController<BleDevice> _devicePickerController =
+  final StreamController<BleDevice> _devicePickerController =
       StreamController<BleDevice>();
 
   late StreamSubscription<ScanResult> _scanSubscription;
-  late StreamSubscription _devicePickerSubscription;
+  late StreamSubscription<BleDevice> _devicePickerSubscription;
 
   ValueStream<List<BleDevice>> get visibleDevices =>
       _visibleDevicesController.stream;
@@ -28,7 +28,7 @@ class DevicesBloc {
   final DeviceRepository _deviceRepository;
   final BleManager _bleManager;
 
-  Stream<BleDevice> get pickedDevice => _deviceRepository.pickedDevice
+  Stream<BleDevice?> get pickedDevice => _deviceRepository.pickedDevice
       .skipWhile((bleDevice) => bleDevice == null);
 
   DevicesBloc(this._deviceRepository, this._bleManager) {
@@ -37,6 +37,11 @@ class DevicesBloc {
     Blemulator()
         .addSimulatedPeripheral(SensorTag(id: 'yet another different id'));
     Blemulator().simulate();
+
+    _devicePickerSubscription =
+        _devicePickerController.stream.listen(_handlePickedDevice);
+
+    init();
   }
 
   void _handlePickedDevice(BleDevice bleDevice) {
@@ -58,25 +63,12 @@ class DevicesBloc {
         .createClient(
             restoreStateIdentifier: 'example-restore-state-identifier',
             restoreStateAction: (peripherals) {
-              peripherals.forEach((peripheral) {
+              for (var peripheral in peripherals) {
                 Fimber.d('Restored peripheral: ${peripheral.name}');
-              });
+              }
             })
-        .then((it) => startScan())
+        .then((_) => startScan())
         .catchError((e) => Fimber.d('Couldn\'t create BLE client', ex: e));
-
-    if (_visibleDevicesController.isClosed) {
-      _visibleDevicesController =
-          BehaviorSubject<List<BleDevice>>.seeded(<BleDevice>[]);
-    }
-
-    if (_devicePickerController.isClosed) {
-      _devicePickerController = StreamController<BleDevice>();
-    }
-
-    Fimber.d(' listen to _devicePickerController.stream');
-    _devicePickerSubscription =
-        _devicePickerController.stream.listen(_handlePickedDevice);
   }
 
   void startScan() {
@@ -90,7 +82,7 @@ class DevicesBloc {
         Fimber.d('found new device ${scanResult.advertisementData.localName}'
             ' ${scanResult.peripheral.identifier}');
         bleDevices.add(bleDevice);
-        _visibleDevicesController.add(bleDevices.sublist(0));
+        _visibleDevicesController.add(List<BleDevice>.from(bleDevices));
       }
     });
   }
@@ -99,7 +91,7 @@ class DevicesBloc {
     await _scanSubscription.cancel();
     await _bleManager.stopPeripheralScan();
     bleDevices.clear();
-    _visibleDevicesController.add(bleDevices.sublist(0));
+    _visibleDevicesController.add(List<BleDevice>.from(bleDevices));
     startScan();
   }
 }

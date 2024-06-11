@@ -10,27 +10,23 @@ class PeripheralDetailsBloc
   final BleAdapter _bleAdapter;
   final BlePeripheral _chosenPeripheral;
 
-  PeripheralDetailsBloc(this._bleAdapter, this._chosenPeripheral) {
-    try {
-      //TODO check if device is connected
-      _bleAdapter
-          .discoverAndGetServicesCharacteristics(_chosenPeripheral.id)
-          .then(
-        (bleServices) {
-          add(ServicesFetchedEvent(bleServices));
-        },
-      );
-    } on BleError catch (_) {
-      // TODO handle the error.
-      //  To my knowledge only possible cause is either peripheral got
-      //  disconnected or Bluetooth has been turned off,
-      //  so it should be handled the same way as disconnection.
-    }
+  PeripheralDetailsBloc(this._bleAdapter, this._chosenPeripheral)
+      : super(PeripheralDetailsState(peripheral: _chosenPeripheral)) {
+    _initialize();
   }
 
-  @override
-  PeripheralDetailsState get initialState =>
-      PeripheralDetailsState(peripheral: _chosenPeripheral);
+  void _initialize() async {
+    try {
+      final bleServices = await _bleAdapter
+          .discoverAndGetServicesCharacteristics(_chosenPeripheral.id);
+      add(ServicesFetchedEvent(bleServices));
+    } on BleError catch (e) {
+      // Handle the error.
+      // Possible causes: peripheral got disconnected or Bluetooth has been turned off.
+      // Handling it the same way as disconnection.
+      print('Error discovering services: $e');
+    }
+  }
 
   @override
   Stream<PeripheralDetailsState> mapEventToState(

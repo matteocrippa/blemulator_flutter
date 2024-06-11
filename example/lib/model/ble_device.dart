@@ -7,7 +7,7 @@ abstract class BleDevice {
   String id;
   int counter = 0;
   final String name;
-  DeviceCategory _category;
+  late DeviceCategory _category;
   final bool _isConnected = false;
   Peripheral peripheral;
 
@@ -57,10 +57,10 @@ abstract class BleDevice {
 }
 
 class DisconnectedBleDevice extends BleDevice {
-  StreamController<BleDevice> _devicesInConnectingProcess;
+  late StreamController<BleDevice> _devicesInConnectingProcess;
 
   DisconnectedBleDevice(String name, String id, Peripheral peripheral)
-      : super(name ?? '', id, peripheral);
+      : super(name, id, peripheral);
 
   @override
   String toString() {

@@ -2,11 +2,11 @@ import 'package:blemulator_example/model/signal_level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  List<int> rssiTestValues;
-  List<SignalLevel> expectedSignalLevels;
+  late List<int> rssiTestValues;
+  late List<SignalLevel> expectedSignalLevels;
 
   tearDown(() {
-    rssiTestValues = null;
+    rssiTestValues = [];
   });
 
   void testRssiToSignalLevelParsing() {
@@ -17,7 +17,7 @@ void main() {
   group('SignalLevel for rssi', () {
     test('= null is .unknown', () {
       // when
-      rssiTestValues = [null];
+      rssiTestValues = [];
 
       // then
       expectedSignalLevels = [SignalLevel.unknown];
@@ -38,10 +38,7 @@ void main() {
       rssiTestValues = [-89, -60];
 
       // then
-      expectedSignalLevels = [
-        SignalLevel.medium,
-        SignalLevel.medium
-      ];
+      expectedSignalLevels = [SignalLevel.medium, SignalLevel.medium];
       testRssiToSignalLevelParsing();
     });
 

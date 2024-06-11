@@ -7,7 +7,7 @@ class DevicesBlocProvider extends InheritedWidget {
   final DevicesBloc devicesBloc;
 
   DevicesBlocProvider({
-    required Key key,
+    Key? key,
     DevicesBloc? devicesBloc,
     required Widget child,
   })  : devicesBloc =

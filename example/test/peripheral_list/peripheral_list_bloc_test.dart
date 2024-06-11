@@ -9,17 +9,16 @@ import '../mock/mocks.dart';
 import '../mock/sample_ble_peripheral.dart';
 
 void main() {
-  PeripheralListBloc peripheralListBloc;
-  MockBleAdapter bleAdapter;
-  StreamController<BlePeripheral> peripheralsStreamController;
+  late PeripheralListBloc peripheralListBloc;
+  late MockBleAdapter? bleAdapter;
+  late StreamController<BlePeripheral> peripheralsStreamController;
 
   setUp(() {
     bleAdapter = MockBleAdapter();
-    peripheralListBloc =
-        PeripheralListBloc(bleAdapter);
+    peripheralListBloc = PeripheralListBloc(bleAdapter!);
     peripheralsStreamController = StreamController();
 
-    when(bleAdapter.blePeripherals)
+    when(bleAdapter?.blePeripherals)
         .thenAnswer((_) => peripheralsStreamController.stream);
   });
 
@@ -38,8 +37,8 @@ void main() {
   });
 
   test('initial state is correct', () {
-    expect(peripheralListBloc.initialState.peripherals, []);
-    expect(peripheralListBloc.initialState.scanningEnabled, false);
+    expect(peripheralListBloc.state.peripherals, []);
+    expect(peripheralListBloc.state.scanningEnabled, false);
   });
 
   test('close does not emit new states', () {
@@ -110,7 +109,8 @@ void main() {
       final expectedResponse = [
         PeripheralListState.initial(),
         PeripheralListState(peripherals: [], scanningEnabled: true),
-        PeripheralListState(peripherals: [samplePeripheral], scanningEnabled: true)
+        PeripheralListState(
+            peripherals: [samplePeripheral], scanningEnabled: true)
       ];
       expectLater(peripheralListBloc, emitsInOrder(expectedResponse));
     });
@@ -133,7 +133,8 @@ void main() {
       final expectedResponse = [
         PeripheralListState.initial(),
         PeripheralListState(peripherals: [], scanningEnabled: true),
-        PeripheralListState(peripherals: [samplePeripheral], scanningEnabled: true),
+        PeripheralListState(
+            peripherals: [samplePeripheral], scanningEnabled: true),
         PeripheralListState(
             peripherals: [samplePeripheral, differentSamplePeripheral],
             scanningEnabled: true),
@@ -161,7 +162,8 @@ void main() {
     final expectedResponse = [
       PeripheralListState.initial(),
       PeripheralListState(peripherals: [], scanningEnabled: true),
-      PeripheralListState(peripherals: [samplePeripheral], scanningEnabled: true),
+      PeripheralListState(
+          peripherals: [samplePeripheral], scanningEnabled: true),
       PeripheralListState(
           peripherals: [samplePeripheral, differentSamplePeripheral],
           scanningEnabled: true),

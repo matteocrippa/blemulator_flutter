@@ -7,21 +7,17 @@ import './bloc.dart';
 class NavigationBloc extends Bloc<NavigationEvent, void> {
   final GlobalKey<NavigatorState> navigatorKey;
 
-  NavigationBloc({required this.navigatorKey});
+  NavigationBloc({required this.navigatorKey}) : super(null);
 
   @override
-  void get initialState {
-    return;
-  }
-
-  Stream<dynamic> mapEventToState(
-    NavigationEvent event,
-  ) async* {
+  Stream<void> mapEventToState(NavigationEvent event) async* {
     if (event is Pop) {
       navigatorKey.currentState?.pop();
     } else if (event is NavigateToPeripheralDetails) {
-      await navigatorKey.currentState
-          ?.pushNamed(RouteName.peripheralDetails, arguments: event.peripheral);
+      await navigatorKey.currentState?.pushNamed(
+        RouteName.peripheralDetails,
+        arguments: event.peripheral,
+      );
     }
   }
 }

@@ -6,7 +6,7 @@ class PeripheralTestOperations {
   final Peripheral peripheral;
   final Logger log;
   final Logger logError;
-  StreamSubscription monitoringStreamSubscription;
+  late StreamSubscription monitoringStreamSubscription;
   final BleManager bleManager;
 
   PeripheralTestOperations(
@@ -40,43 +40,55 @@ class PeripheralTestOperations {
     });
   }
 
-  Future<void> discovery() async => await _runWithErrorHandling(() async {
-        await peripheral.discoverAllServicesAndCharacteristics();
-        var services = await peripheral.services();
-        log('PRINTING SERVICES for \n${peripheral.name}');
-        services.forEach((service) => log('Found service \n${service.uuid}'));
+  Future<void> discovery() async {
+    await _runWithErrorHandling(() async {
+      // Discover all services and characteristics
+      await peripheral.discoverAllServicesAndCharacteristics();
+      var services = await peripheral.services();
+
+      log('PRINTING SERVICES for \n${peripheral.name}');
+      for (var service in services) {
+        log('Found service \n${service.uuid}');
+      }
+
+      if (services.isNotEmpty) {
         var service = services.first;
         log('PRINTING CHARACTERISTICS FOR SERVICE \n${service.uuid}');
 
         var characteristics = await service.characteristics();
-        characteristics.forEach((characteristic) {
+        for (var characteristic in characteristics) {
           log('${characteristic.uuid}');
-        });
+        }
 
         log('PRINTING CHARACTERISTICS FROM \nPERIPHERAL for the same service');
         var characteristicFromPeripheral =
             await peripheral.characteristics(service.uuid);
-        characteristicFromPeripheral.forEach((characteristic) =>
-            log('Found characteristic \n ${characteristic.uuid}'));
+        for (var characteristic in characteristicFromPeripheral) {
+          log('Found characteristic \n${characteristic.uuid}');
+        }
 
-        //------------ descriptors
-        List<Descriptor> descriptors;
+        // Descriptors
+        List<Descriptor>? descriptors;
 
-        var printDescriptors = () => descriptors.forEach((descriptor) {
+        void printDescriptors() {
+          if (descriptors != null) {
+            for (var descriptor in descriptors!) {
               log('Descriptor: ${descriptor.uuid}');
-            });
+            }
+          }
+        }
 
         log('Using IR Temperature service/IR Temperature Data '
             'characteristic for following descriptor tests');
-        log('PRINTING DESCRIPTORS FOR PERIPHERAL');
 
+        // Printing descriptors for peripheral
+        log('PRINTING DESCRIPTORS FOR PERIPHERAL');
         descriptors = await peripheral.descriptorsForCharacteristic(
             SensorTagTemperatureUuids.temperatureService,
             SensorTagTemperatureUuids.temperatureDataCharacteristic);
-
         printDescriptors();
-        descriptors = null;
 
+        // Printing descriptors for service
         log('PRINTING DESCRIPTORS FOR SERVICE');
         var chosenService = services.firstWhere((elem) =>
             elem.uuid ==
@@ -84,19 +96,18 @@ class PeripheralTestOperations {
 
         descriptors = await chosenService.descriptorsForCharacteristic(
             SensorTagTemperatureUuids.temperatureDataCharacteristic);
-
         printDescriptors();
-        descriptors = null;
 
-        var temperatureCharacteristics =
-            await chosenService.characteristics();
+        // Printing descriptors for characteristic
+        var temperatureCharacteristics = await chosenService.characteristics();
         var chosenCharacteristic = temperatureCharacteristics.first;
 
         log('PRINTING DESCRIPTORS FOR CHARACTERISTIC');
         descriptors = await chosenCharacteristic.descriptors();
-
         printDescriptors();
-      });
+      }
+    });
+  }
 
   Future<void> testReadingRssi() async {
     await _runWithErrorHandling(() async {
@@ -146,11 +157,10 @@ class PeripheralTestOperations {
               SensorTagTemperatureUuids.temperatureService.toLowerCase()));
 
       var characteristics = await service.characteristics();
-      var characteristic = characteristics.firstWhere(
-          (characteristic) =>
-              characteristic.uuid ==
-              SensorTagTemperatureUuids.temperatureDataCharacteristic
-                  .toLowerCase());
+      var characteristic = characteristics.firstWhere((characteristic) =>
+          characteristic.uuid ==
+          SensorTagTemperatureUuids.temperatureDataCharacteristic
+              .toLowerCase());
 
       var readValue = await characteristic.read();
       log('Temperature config value: \n${_convertToTemperature(readValue)}C');
@@ -221,11 +231,10 @@ class PeripheralTestOperations {
               SensorTagTemperatureUuids.temperatureService.toLowerCase()));
 
       var characteristics = await service.characteristics();
-      var characteristic = characteristics.firstWhere(
-          (characteristic) =>
-              characteristic.uuid ==
-              SensorTagTemperatureUuids.temperatureConfigCharacteristic
-                  .toLowerCase());
+      var characteristic = characteristics.firstWhere((characteristic) =>
+          characteristic.uuid ==
+          SensorTagTemperatureUuids.temperatureConfigCharacteristic
+              .toLowerCase());
       var currentValue = await characteristic.read();
       int valueToSave;
       if (currentValue[0] == 0) {
@@ -280,11 +289,10 @@ class PeripheralTestOperations {
               SensorTagTemperatureUuids.temperatureService.toLowerCase()));
 
       var characteristics = await service.characteristics();
-      var characteristic = characteristics.firstWhere(
-          (characteristic) =>
-              characteristic.uuid ==
-              SensorTagTemperatureUuids.temperatureDataCharacteristic
-                  .toLowerCase());
+      var characteristic = characteristics.firstWhere((characteristic) =>
+          characteristic.uuid ==
+          SensorTagTemperatureUuids.temperatureDataCharacteristic
+              .toLowerCase());
 
       _startMonitoringTemperature(
           characteristic.monitor(transactionId: 'monitor'), log);
@@ -374,9 +382,8 @@ class PeripheralTestOperations {
       await Future.delayed(Duration(seconds: 1));
 
       log('Reading temperature value');
-      var dataCharacteristic =
-          await service.readCharacteristic(
-              SensorTagTemperatureUuids.temperatureDataCharacteristic);
+      var dataCharacteristic = await service.readCharacteristic(
+          SensorTagTemperatureUuids.temperatureDataCharacteristic);
       log('Read temperature value ${_convertToTemperature(dataCharacteristic.value)}C');
 
       log('Turning on temperature update');
@@ -410,17 +417,15 @@ class PeripheralTestOperations {
 
       log('Fetching config characteristic');
       var characteristics = await service.characteristics();
-      var configCharacteristic = characteristics.firstWhere(
-          (characteristic) =>
-              characteristic.uuid ==
-              SensorTagTemperatureUuids.temperatureConfigCharacteristic
-                  .toLowerCase());
+      var configCharacteristic = characteristics.firstWhere((characteristic) =>
+          characteristic.uuid ==
+          SensorTagTemperatureUuids.temperatureConfigCharacteristic
+              .toLowerCase());
       log('Fetching data characteristic');
-      var dataCharacteristic = characteristics.firstWhere(
-          (characteristic) =>
-              characteristic.uuid ==
-              SensorTagTemperatureUuids.temperatureDataCharacteristic
-                  .toLowerCase());
+      var dataCharacteristic = characteristics.firstWhere((characteristic) =>
+          characteristic.uuid ==
+          SensorTagTemperatureUuids.temperatureDataCharacteristic
+              .toLowerCase());
 
       log('Start monitoring temperature');
       _startMonitoringTemperature(
@@ -539,8 +544,7 @@ class PeripheralTestOperations {
             SensorTagTemperatureUuids.temperatureService.toLowerCase());
 
         log('Fetching characteristic');
-        var temperatureCharacteristics =
-            await chosenService.characteristics();
+        var temperatureCharacteristics = await chosenService.characteristics();
         var chosenCharacteristic = temperatureCharacteristics.first;
 
         log('Reading value...');
@@ -563,8 +567,7 @@ class PeripheralTestOperations {
             SensorTagTemperatureUuids.temperatureService.toLowerCase());
 
         log('Fetching characteristic');
-        var temperatureCharacteristics =
-            await chosenService.characteristics();
+        var temperatureCharacteristics = await chosenService.characteristics();
         var chosenCharacteristic = temperatureCharacteristics.first;
 
         log('Fetching descriptor');
@@ -622,8 +625,7 @@ class PeripheralTestOperations {
             SensorTagTemperatureUuids.temperatureService.toLowerCase());
 
         log('Fetching characteristic');
-        var temperatureCharacteristics =
-            await chosenService.characteristics();
+        var temperatureCharacteristics = await chosenService.characteristics();
         var chosenCharacteristic = temperatureCharacteristics.first;
 
         log('Writing value...');
@@ -645,8 +647,7 @@ class PeripheralTestOperations {
             SensorTagTemperatureUuids.temperatureService.toLowerCase());
 
         log('Fetching characteristic');
-        var temperatureCharacteristics =
-            await chosenService.characteristics();
+        var temperatureCharacteristics = await chosenService.characteristics();
         var chosenCharacteristic = temperatureCharacteristics.first;
 
         log('Fetching descriptor');

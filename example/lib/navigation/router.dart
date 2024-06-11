@@ -6,6 +6,7 @@ import 'package:blemulator_example/peripheral_details/peripheral_details_screen.
 import 'package:blemulator_example/peripheral_list/bloc.dart';
 import 'package:blemulator_example/peripheral_list/peripheral_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:blemulator_example/model/ble_peripheral.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -16,8 +17,9 @@ class Router {
           PeripheralListScreen(),
         );
       case RouteName.peripheralDetails:
+        final peripheral = settings.arguments as BlePeripheral;
         return navigation.RouteFactory.build<PeripheralDetailsBloc>(
-          PeripheralDetailsBloc(BleAdapterInjector.inject, settings.arguments),
+          PeripheralDetailsBloc(BleAdapterInjector.inject, peripheral),
           PeripheralDetailsScreen(),
         );
       default:

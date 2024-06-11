@@ -28,9 +28,12 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildExample() {
-    return MaterialApp(title: 'Blemulator example',
+    return MaterialApp(
+      title: 'Blemulator example',
       theme: ThemeData(
-        primaryColor: Color(0xFF0A3D91), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xFFCC0000)),
+        primaryColor: Color(0xFF0A3D91),
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: Color(0xFFCC0000)),
       ),
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
@@ -51,7 +54,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: CustomColors.primary,
           scaffoldBackgroundColor: CustomColors.scaffoldBackground,
-          cardTheme: CustomTheme.card, colorScheme: ColorScheme.fromSwatch().copyWith(secondary: CustomColors.accent),
+          cardTheme: CustomTheme.card,
+          colorScheme:
+              ColorScheme.fromSwatch().copyWith(secondary: CustomColors.accent),
         ),
         initialRoute: RouteName.home,
         onGenerateRoute: (settings) => Router.generateRoute(settings),

@@ -7,18 +7,22 @@ class DeviceDetailsBlocProvider extends InheritedWidget {
   final DeviceDetailsBloc deviceDetailsBloc;
 
   DeviceDetailsBlocProvider({
-    Key key,
-    DeviceDetailsBloc deviceDetailsBloc,
-    Widget child,
+    Key? key,
+    DeviceDetailsBloc? deviceDetailsBloc,
+    required Widget child,
   })  : deviceDetailsBloc = deviceDetailsBloc ??
             DeviceDetailsBloc(DeviceRepository(), BleManager()),
         super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+  bool updateShouldNotify(DeviceDetailsBlocProvider oldWidget) {
+    return deviceDetailsBloc != oldWidget.deviceDetailsBloc;
+  }
 
-  static DeviceDetailsBloc of(BuildContext context) =>
-      (context.dependOnInheritedWidgetOfExactType<DeviceDetailsBlocProvider>()
-              as DeviceDetailsBlocProvider)
-          .deviceDetailsBloc;
+  static DeviceDetailsBloc of(BuildContext context) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<DeviceDetailsBlocProvider>();
+    assert(result != null, 'No DeviceDetailsBlocProvider found in context');
+    return result!.deviceDetailsBloc;
+  }
 }

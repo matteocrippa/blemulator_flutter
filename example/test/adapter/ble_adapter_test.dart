@@ -17,8 +17,8 @@ void main() {
   var bleManager = MockBleManager();
   var blemulator = MockBlemulator();
   var bleAdapter = BleAdapter(bleManager, blemulator);
-  StreamController<ScanResult> scanResultStreamController;
-  StreamSubscription<BlePeripheral> blePeripheralsSubscription;
+  late StreamController<ScanResult> scanResultStreamController;
+  late StreamSubscription<BlePeripheral> blePeripheralsSubscription;
 
   setUp(() {
     scanResultStreamController = StreamController();
@@ -59,7 +59,7 @@ void main() {
 
   void cancelBlePeripheralSubscription() {
     blePeripheralsSubscription.cancel();
-    }
+  }
 
   tearDown(() {
     scanResultStreamController.close();

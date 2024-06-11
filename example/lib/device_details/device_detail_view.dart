@@ -1,87 +1,36 @@
-import 'dart:async';
-
-import 'package:fimber/fimber.dart';
+import 'package:blemulator_example/device_details/device_detail_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:blemulator_example/device_details/device_details_bloc.dart';
 import 'package:blemulator_example/device_details/view/auto_test_view.dart';
 import 'package:blemulator_example/device_details/view/manual_test_view.dart';
 
-class DeviceDetailsView extends StatefulWidget {
-  @override
-  State<DeviceDetailsView> createState() => DeviceDetailsViewState();
-}
-
-class DeviceDetailsViewState extends State<DeviceDetailsView> {
-  late DeviceDetailsBloc _deviceDetailsBloc;
-  late StreamSubscription _appStateSubscription;
-
-  bool _shouldRunOnResume = true;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Fimber.d('didChangeDependencies');
-  }
-
-  void _onResume() {
-    Fimber.d('onResume');
-    _deviceDetailsBloc.init();
-    _appStateSubscription =
-        _deviceDetailsBloc.disconnectedDevice.listen((bleDevice) async {
-      Fimber.d('navigate to details');
-      _onPause();
-      Navigator.pop(context);
-      _shouldRunOnResume = true;
-      Fimber.d('back from details');
-    });
-  }
-
-  void _onPause() {
-    Fimber.d('onPause');
-    _appStateSubscription.cancel();
-    _deviceDetailsBloc.dispose();
-  }
-
-  @override
-  void dispose() {
-    Fimber.d('Dispose DeviceListScreenState');
-    _onPause();
-    super.dispose();
-  }
-
+class DeviceDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return _deviceDetailsBloc.disconnect().then((_) {
-          return false;
-        });
-      },
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-            backgroundColor: Colors.grey[300],
-            appBar: AppBar(
-              title: Text('Device Details'),
-              bottom: TabBar(
-                tabs: [
-                  Tab(
-                    icon: Icon(Icons.autorenew),
-                    text: 'Automatic',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.settings),
-                    text: 'Manual',
-                  ),
-                ],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          title: Text('Device Details'),
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.autorenew),
+                text: 'Automatic',
               ),
-            ),
-            body: TabBarView(
-              children: <Widget>[
-                AutoTestView(_deviceDetailsBloc),
-                ManualTestView(_deviceDetailsBloc),
-              ],
-            )),
+              Tab(
+                icon: Icon(Icons.settings),
+                text: 'Manual',
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            AutoTestView(),
+            ManualTestView(),
+          ],
+        ),
       ),
     );
   }

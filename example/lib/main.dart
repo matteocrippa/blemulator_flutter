@@ -1,3 +1,4 @@
+import 'package:blemulator_example/device_details/device_detail_cubit.dart';
 import 'package:blemulator_example/device_details/device_detail_view.dart';
 import 'package:blemulator_example/devices_list/devices_bloc.dart';
 import 'package:blemulator_example/devices_list/devices_list_view.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
       RepositoryProvider(create: (context) => BleManager()),
       BlocProvider(
         create: (context) => DevicesBloc(context.read(), context.read()),
+      ),
+      BlocProvider(
+        create: (context) => DeviceDetailsCubit(context.read(), context.read()),
       )
     ], child: _buildExample());
   }

@@ -5,12 +5,7 @@ import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 import 'package:blemulator_example/repository/device_repository.dart';
 import 'package:blemulator_example/test_scenarios/test_scenarios.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-
-// class DeviceDetailsBlocNew extends Cubit<BleDevice?> {
-
-// }
 
 class DeviceDetailsBloc {
   final BleManager _bleManager;

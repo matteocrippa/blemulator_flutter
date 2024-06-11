@@ -1,13 +1,11 @@
-
+import 'package:blemulator_example/device_details/device_detail_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:blemulator_example/device_details/device_details_bloc.dart';
 import 'package:blemulator_example/device_details/view/button_view.dart';
 import 'package:blemulator_example/device_details/view/logs_container_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ManualTestView extends StatelessWidget {
-  final DeviceDetailsBloc _deviceDetailsBloc;
-
-  ManualTestView(this._deviceDetailsBloc);
+  ManualTestView();
 
   @override
   Widget build(BuildContext context) {
@@ -17,103 +15,104 @@ class ManualTestView extends StatelessWidget {
         Expanded(
           flex: 3,
           child: SingleChildScrollView(
-            child: _createControlPanel(),
+            child: _createControlPanel(context),
           ),
         ),
         Expanded(
           flex: 7,
-          child: LogsContainerView(_deviceDetailsBloc.logs),
+          child: LogsContainerView(),
         )
       ]),
     );
   }
 
-  void _connect() {
-    _deviceDetailsBloc.connect();
+  void _connect(BuildContext context) {
+    context.read<DeviceDetailsCubit>().connect();
   }
 
-  void _disconnect() {
-    _deviceDetailsBloc.disconnectManual();
+  void _disconnect(BuildContext context) {
+    context.read<DeviceDetailsCubit>().disconnectManual();
   }
 
-  void _readRssi() {
-    _deviceDetailsBloc.readRssi();
+  void _readRssi(BuildContext context) {
+    context.read<DeviceDetailsCubit>().readRssi();
   }
 
-  void _requestMtu() {
-    _deviceDetailsBloc.requestMtu();
+  void _requestMtu(BuildContext context) {
+    context.read<DeviceDetailsCubit>().requestMtu();
   }
 
-  void _discovery() {
-    _deviceDetailsBloc.discovery();
+  void _discovery(BuildContext context) {
+    context.read<DeviceDetailsCubit>().discovery();
   }
 
-  void _fetchConnectedDevices() {
-    _deviceDetailsBloc.fetchConnectedDevices();
+  void _fetchConnectedDevices(BuildContext context) {
+    context.read<DeviceDetailsCubit>().fetchConnectedDevices();
   }
 
-  void _fetchKnownDevices() {
-    _deviceDetailsBloc.fetchKnownDevices();
+  void _fetchKnownDevices(BuildContext context) {
+    context.read<DeviceDetailsCubit>().fetchKnownDevices();
   }
 
-  void _readCharacteristicForPeripheral() {
-    _deviceDetailsBloc.readCharacteristicForPeripheral();
+  void _readCharacteristicForPeripheral(BuildContext context) {
+    context.read<DeviceDetailsCubit>().readCharacteristicForPeripheral();
   }
 
-  void _readCharacteristicForService() {
-    _deviceDetailsBloc.readCharacteristicForService();
+  void _readCharacteristicForService(BuildContext context) {
+    context.read<DeviceDetailsCubit>().readCharacteristicForService();
   }
 
-  void _readCharacteristicDirectly() {
-    _deviceDetailsBloc.readCharacteristicDirectly();
+  void _readCharacteristicDirectly(BuildContext context) {
+    context.read<DeviceDetailsCubit>().readCharacteristicDirectly();
   }
 
-  void _writeCharacteristicForPeripheral() {
-    _deviceDetailsBloc.writeCharacteristicForPeripheral();
+  void _writeCharacteristicForPeripheral(BuildContext context) {
+    context.read<DeviceDetailsCubit>().writeCharacteristicForPeripheral();
   }
 
-  void _writeCharacteristicForService() {
-    _deviceDetailsBloc.writeCharacteristicForService();
+  void _writeCharacteristicForService(BuildContext context) {
+    context.read<DeviceDetailsCubit>().writeCharacteristicForService();
   }
 
-  void _writeCharacteristicDirectly() {
-    _deviceDetailsBloc.writeCharacteristicDirectly();
+  void _writeCharacteristicDirectly(BuildContext context) {
+    context.read<DeviceDetailsCubit>().writeCharacteristicDirectly();
   }
 
-  void _monitorCharacteristicForPeripheral() {
-    _deviceDetailsBloc.monitorCharacteristicForPeripheral();
+  void _monitorCharacteristicForPeripheral(BuildContext context) {
+    context.read<DeviceDetailsCubit>().monitorCharacteristicForPeripheral();
   }
 
-  void _monitorCharacteristicForService() {
-    _deviceDetailsBloc.monitorCharacteristicForService();
+  void _monitorCharacteristicForService(BuildContext context) {
+    context.read<DeviceDetailsCubit>().monitorCharacteristicForService();
   }
 
-  void _monitorCharacteristicDirectly() {
-    _deviceDetailsBloc.monitorCharacteristicDirectly();
+  void _monitorCharacteristicDirectly(BuildContext context) {
+    context.read<DeviceDetailsCubit>().monitorCharacteristicDirectly();
   }
 
-  void _disableBluetooth() {
-    _deviceDetailsBloc.disableBluetooth();
+  void _disableBluetooth(BuildContext context) {
+    context.read<DeviceDetailsCubit>().disableBluetooth();
   }
 
-  void _enableBluetooth() {
-    _deviceDetailsBloc.enableBluetooth();
+  void _enableBluetooth(BuildContext context) {
+    context.read<DeviceDetailsCubit>().enableBluetooth();
   }
 
-  void _fetchBluetoothState() {
-    _deviceDetailsBloc.fetchBluetoothState();
+  void _fetchBluetoothState(BuildContext context) {
+    context.read<DeviceDetailsCubit>().fetchBluetoothState();
   }
 
-  Column _createControlPanel() {
+  Column _createControlPanel(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             children: <Widget>[
-              ButtonView('Connect', action: _connect),
-              ButtonView('Disconnect', action: _disconnect),
-              ButtonView('Connected devices', action: _fetchConnectedDevices),
+              ButtonView('Connect', action: () => _connect(context)),
+              ButtonView('Disconnect', action: () => _disconnect(context)),
+              ButtonView('Connected devices',
+                  action: () => _fetchConnectedDevices(context)),
             ],
           ),
         ),
@@ -121,9 +120,10 @@ class ManualTestView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             children: <Widget>[
-              ButtonView('Read Rssi', action: _readRssi),
-              ButtonView('Request MTU', action: _requestMtu),
-              ButtonView('Known devices', action: _fetchKnownDevices),
+              ButtonView('Read Rssi', action: () => _readRssi(context)),
+              ButtonView('Request MTU', action: () => _requestMtu(context)),
+              ButtonView('Known devices',
+                  action: () => _fetchKnownDevices(context)),
             ],
           ),
         ),
@@ -131,7 +131,7 @@ class ManualTestView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             children: <Widget>[
-              ButtonView('Discovery', action: _discovery),
+              ButtonView('Discovery', action: () => _discovery(context)),
             ],
           ),
         ),
@@ -140,11 +140,11 @@ class ManualTestView extends StatelessWidget {
           child: Row(
             children: <Widget>[
               ButtonView('Write to temp config via peripheral',
-                  action: _writeCharacteristicForPeripheral),
+                  action: () => _writeCharacteristicForPeripheral(context)),
               ButtonView('Read temp via peripheral',
-                  action: _readCharacteristicForPeripheral),
+                  action: () => _readCharacteristicForPeripheral(context)),
               ButtonView('Monitor temp via peripheral',
-                  action: _monitorCharacteristicForPeripheral),
+                  action: () => _monitorCharacteristicForPeripheral(context)),
             ],
           ),
         ),
@@ -153,11 +153,11 @@ class ManualTestView extends StatelessWidget {
           child: Row(
             children: <Widget>[
               ButtonView('Write to temp config via service',
-                  action: _writeCharacteristicForService),
+                  action: () => _writeCharacteristicForService(context)),
               ButtonView('Read temp via service',
-                  action: _readCharacteristicForService),
+                  action: () => _readCharacteristicForService(context)),
               ButtonView('Monitor temp via service',
-                  action: _monitorCharacteristicForService),
+                  action: () => _monitorCharacteristicForService(context)),
             ],
           ),
         ),
@@ -166,11 +166,11 @@ class ManualTestView extends StatelessWidget {
           child: Row(
             children: <Widget>[
               ButtonView('Write to temp config directly',
-                  action: _writeCharacteristicDirectly),
+                  action: () => _writeCharacteristicDirectly(context)),
               ButtonView('Read temp directly',
-                  action: _readCharacteristicDirectly),
+                  action: () => _readCharacteristicDirectly(context)),
               ButtonView('Monitor temp directly',
-                  action: _monitorCharacteristicDirectly),
+                  action: () => _monitorCharacteristicDirectly(context)),
             ],
           ),
         ),
@@ -178,9 +178,12 @@ class ManualTestView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             children: <Widget>[
-              ButtonView('Monitor temp', action: _monitorCharacteristicForPeripheral),
-              ButtonView('Turn on temp', action: _writeCharacteristicForPeripheral),
-              ButtonView('Read temp', action: _readCharacteristicForPeripheral),
+              ButtonView('Monitor temp',
+                  action: () => _monitorCharacteristicForPeripheral(context)),
+              ButtonView('Turn on temp',
+                  action: () => _writeCharacteristicForPeripheral(context)),
+              ButtonView('Read temp',
+                  action: () => _readCharacteristicForPeripheral(context)),
             ],
           ),
         ),
@@ -188,9 +191,12 @@ class ManualTestView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             children: <Widget>[
-              ButtonView('Enable bluetooth', action: _enableBluetooth),
-              ButtonView('Disable bluetooth', action: _disableBluetooth),
-              ButtonView('Fetch BT State', action: _fetchBluetoothState),
+              ButtonView('Enable bluetooth',
+                  action: () => _enableBluetooth(context)),
+              ButtonView('Disable bluetooth',
+                  action: () => _disableBluetooth(context)),
+              ButtonView('Fetch BT State',
+                  action: () => _fetchBluetoothState(context)),
             ],
           ),
         ),

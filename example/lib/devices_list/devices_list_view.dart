@@ -3,6 +3,7 @@ import 'package:blemulator_example/devices_list/hex_painter.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DevicesListScreen extends StatelessWidget {
   @override
@@ -69,7 +70,8 @@ class DevicesList extends StatelessWidget {
 
   static void _onDeviceTap(BuildContext context, BleDevice bleDevice) {
     print('clicked device: ${bleDevice.name}');
-    context.read<DevicesBloc>().devicePicker.add(bleDevice);
+    context.read<DevicesBloc>().select(bleDevice);
+    context.push('/details');
   }
 
   static Widget _buildAvatar(BuildContext context, BleDevice device) {

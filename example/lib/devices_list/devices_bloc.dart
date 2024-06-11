@@ -9,19 +9,11 @@ import 'package:blemulator/blemulator.dart';
 import 'package:blemulator_example/example_peripherals/sensor_tag.dart';
 
 class DevicesBloc extends Cubit<List<BleDevice>> {
-  final StreamController<BleDevice> _devicePickerController =
-      StreamController<BleDevice>();
-
   late StreamSubscription<ScanResult> _scanSubscription;
   late StreamSubscription<BleDevice> _devicePickerSubscription;
 
-  Sink<BleDevice> get devicePicker => _devicePickerController.sink;
-
   final DeviceRepository _deviceRepository;
   final BleManager _bleManager;
-
-  Stream<BleDevice?> get pickedDevice => _deviceRepository.pickedDevice
-      .skipWhile((bleDevice) => bleDevice == null);
 
   DevicesBloc(this._deviceRepository, this._bleManager) : super([]) {
     Blemulator().addSimulatedPeripheral(SensorTag());
@@ -30,20 +22,16 @@ class DevicesBloc extends Cubit<List<BleDevice>> {
         .addSimulatedPeripheral(SensorTag(id: 'yet another different id'));
     Blemulator().simulate();
 
-    _devicePickerSubscription =
-        _devicePickerController.stream.listen(_handlePickedDevice);
-
     init();
   }
 
-  void _handlePickedDevice(BleDevice bleDevice) {
+  void select(BleDevice bleDevice) {
     _deviceRepository.pickDevice(bleDevice);
   }
 
   void dispose() {
     Fimber.d('cancel _devicePickerSubscription');
     _devicePickerSubscription.cancel();
-    _devicePickerController.close();
     _scanSubscription.cancel();
   }
 

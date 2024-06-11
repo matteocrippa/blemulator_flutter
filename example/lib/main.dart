@@ -6,13 +6,12 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   Fimber.plantTree(DebugTree());
   runApp(MyApp());
 }
-
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
   @override
@@ -27,19 +26,26 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildExample() {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Blemulator example',
       theme: ThemeData(
         primaryColor: Color(0xFF0A3D91),
         colorScheme:
             ColorScheme.fromSwatch().copyWith(secondary: Color(0xFFCC0000)),
       ),
-      initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (context) => DevicesListScreen(),
-        '/details': (context) => DeviceDetailsView(),
-      },
-      navigatorObservers: [routeObserver],
+      routerConfig: GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => DevicesListScreen(),
+          ),
+          GoRoute(
+            path: '/details',
+            builder: (context, state) => DeviceDetailsView(),
+          ),
+        ],
+      ),
     );
   }
 }

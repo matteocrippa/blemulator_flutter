@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:fimber/fimber.dart';
 import 'package:blemulator_example/model/ble_device.dart';
 import 'package:blemulator_example/repository/device_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
 import 'package:blemulator/blemulator.dart';
 import 'package:blemulator_example/example_peripherals/sensor_tag.dart';
 
-class DevicesBloc {
+class DevicesBloc extends Bloc<Object, List<BleDevice>> {
   final List<BleDevice> bleDevices = <BleDevice>[];
 
   final BehaviorSubject<List<BleDevice>> _visibleDevicesController =
@@ -31,7 +32,7 @@ class DevicesBloc {
   Stream<BleDevice?> get pickedDevice => _deviceRepository.pickedDevice
       .skipWhile((bleDevice) => bleDevice == null);
 
-  DevicesBloc(this._deviceRepository, this._bleManager) {
+  DevicesBloc(this._deviceRepository, this._bleManager) : super([]) {
     Blemulator().addSimulatedPeripheral(SensorTag());
     Blemulator().addSimulatedPeripheral(SensorTag(id: 'different id'));
     Blemulator()

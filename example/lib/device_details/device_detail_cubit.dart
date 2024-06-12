@@ -1,6 +1,5 @@
-import 'package:blemulator_example/device_details/device_details_bloc.dart';
 import 'package:blemulator_example/model/ble_device.dart';
-import 'package:blemulator_example/repository/device_repository.dart';
+import 'package:blemulator_example/model/debug_log.dart';
 import 'package:blemulator_example/test_scenarios/test_scenarios.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter_ble_lib_ios_15/flutter_ble_lib.dart';
@@ -8,12 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DeviceDetailsState {
   final BleDevice? device;
-  final PeripheralConnectionState connectionState;
   final List<DebugLog> logs;
 
   DeviceDetailsState({
     required this.device,
-    required this.connectionState,
     required this.logs,
   });
 
@@ -24,61 +21,28 @@ class DeviceDetailsState {
   }) {
     return DeviceDetailsState(
       device: device ?? this.device,
-      connectionState: connectionState ?? this.connectionState,
       logs: logs ?? this.logs,
     );
   }
-
-  @override
-  List<Object?> get props => [device, connectionState, logs];
-}
-
-class DeviceDetailsError {
-  final String message;
-
-  DeviceDetailsError(this.message);
-
-  @override
-  List<Object?> get props => [message];
 }
 
 class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
   final BleManager _bleManager;
-  final DeviceRepository _deviceRepository;
 
   late final Logger log;
   late final Logger logError;
 
-  DeviceDetailsCubit(this._deviceRepository, this._bleManager)
-      : super(DeviceDetailsState(
-            connectionState: PeripheralConnectionState.disconnected,
-            device: null,
-            logs: [])) {
-    var device = _deviceRepository.pickedDevice.valueOrNull;
-    var connectionState = device?.isConnected ?? false
-        ? PeripheralConnectionState.connected
-        : PeripheralConnectionState.disconnected;
-    emit(DeviceDetailsState(
-        device: device, connectionState: connectionState, logs: []));
-  }
-
-  void init() {
-    _bleManager.stopPeripheralScan();
-  }
+  DeviceDetailsCubit(this._bleManager)
+      : super(DeviceDetailsState(device: null, logs: []));
 
   Future<void> disconnect() async {
     _clearLogs();
     await disconnectManual();
-    _deviceRepository.pickDevice(null);
-    emit(DeviceDetailsState(
-        connectionState: PeripheralConnectionState.disconnected,
-        device: null,
-        logs: []));
+    emit(DeviceDetailsState(device: null, logs: []));
   }
 
   Future<void> disconnectManual() async {
-    var state = this.state;
-    var device = state.device;
+    final device = state.device;
     if (device != null && await device.peripheral.isConnected()) {
       _log('DISCONNECTING...');
       await device.peripheral.disconnectOrCancelConnection();
@@ -90,7 +54,6 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
 
   void readRssi() async {
     _clearLogs();
-    var state = this.state;
     var bleDevice = state.device;
     if (bleDevice != null) {
       await PeripheralTestOperations(
@@ -126,10 +89,6 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
     await PeripheralTestOperations(
             _bleManager, state.device!.peripheral, log, logError)
         .fetchConnectedDevice();
-    // _log('Connected devices: ${connectedDevices.length}');
-    // for (var device in connectedDevices) {
-    //   _log('Device: ${device.name}');
-    // }
   }
 
   void fetchKnownDevices() async {
@@ -143,7 +102,6 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
 
   void connectToDevice(BleDevice bleDevice) async {
     _clearLogs();
-    _deviceRepository.pickDevice(bleDevice);
     emit(state.copyWith(device: bleDevice));
     await connect();
   }
@@ -267,9 +225,10 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
 
   Future<void> connect() async {
     _clearLogs();
-    var state = this.state;
-    var bleDevice = state.device;
+    final bleDevice = state.device;
     if (bleDevice != null) {
+      await _bleManager.stopPeripheralScan();
+
       var peripheral = bleDevice.peripheral;
 
       peripheral
@@ -292,8 +251,7 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
 
   void startAutoTest() async {
     _clearLogs();
-    var state = this.state;
-    var bleDevice = state.device;
+    final bleDevice = state.device;
     if (bleDevice != null) {
       Fimber.d('got bleDevice: $bleDevice');
       Fimber.d('The device is connected: ${bleDevice.isConnected}');
@@ -304,7 +262,7 @@ class DeviceDetailsCubit extends Cubit<DeviceDetailsState> {
   }
 
   void _clearLogs() {
-    var state = this.state;
+    final state = this.state;
     emit(state.copyWith(logs: null));
   }
 

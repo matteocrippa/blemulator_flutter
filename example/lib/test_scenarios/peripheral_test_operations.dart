@@ -72,7 +72,7 @@ class PeripheralTestOperations {
 
         void printDescriptors() {
           if (descriptors != null) {
-            for (var descriptor in descriptors!) {
+            for (var descriptor in descriptors) {
               log('Descriptor: ${descriptor.uuid}');
             }
           }

@@ -1,4 +1,3 @@
-import 'package:blemulator_example/device_details/device_detail_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:blemulator_example/device_details/view/auto_test_view.dart';
 import 'package:blemulator_example/device_details/view/manual_test_view.dart';
